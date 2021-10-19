@@ -1,0 +1,6 @@
+ORDER,URLS,NET_SCORE,RAMP_UP_SCORE,CORRECTNESS SCORE,BUS FACTOR SCORE,RESPONSIVENESS SCORE,LICENSE SCORE
+1,https://github.com/cloudinary/cloudinary_npm,0.598,0.71,0.063,0.334,0.241,0.143
+2,https://www.npmjs.com/package/express,0.016,0.348,0.762,0.53,0.055,0.19
+3,https://github.com/nullivex/nodist,0.889,0.88,0.726,0.403,0.83,0.066
+4,https://github.com/lodash/lodash,0.15,0.735,0.0,0.346,0.984,0.028
+5,https://www.npmjs.com/package/browserify,0.62,0.035,0.998,0.439,0.178,0.861
