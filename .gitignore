@@ -1,0 +1,12 @@
+.env
+error.log
+*/bin/
+*/include/
+*/lib/
+*/lib64/
+*/output_files/
+*/share/
+*/test_files/
+*/testing/
+*/lib64
+pyvenv.cfg
