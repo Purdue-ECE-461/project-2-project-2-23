@@ -36,6 +36,7 @@ class Responsiveness:
             logger.debug(f"Responsiveness: final score calculated {self.score}")
         else:
             self.score = 0.5
+        if self.score < 0: self.score = 0;
         return
 
     def calculating_total_issues(self):

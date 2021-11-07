@@ -44,6 +44,7 @@ class Correctness:
             self.check_variable(deduction, "Deduction")
 
             self.score = round(final * (1 - deduction), 4)
+        if self.score < 0: self.score = 0;
 
     def bad_updated_count(self):
         logger.debug(f"Correctness function: bad_updated_count")

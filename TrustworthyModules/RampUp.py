@@ -48,6 +48,8 @@ class RampUp:
         logger.debug(f"Ramp Up: calculating final score using popularity score for {self.module_name}")
         self.score = self.final_score_calculation(weights, score_readme_length, score_readme_examples,
                                                   score_responsiveness_correctness)
+        if self.score < 0: self.score = 0;
+        
         logger.debug(f"Ramp Up: weights calculated {weights}")
         logger.debug(f"Ramp Up: values calculating ramp up {score_readme_length}, {score_readme_examples}, "
                      f"{score_responsiveness_correctness}, {self.popularity_score}")

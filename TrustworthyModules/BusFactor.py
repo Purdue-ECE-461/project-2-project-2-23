@@ -69,6 +69,7 @@ class BusFactor(Metric):
                    self.submetric_weights['high'], self.submetric_weights['recent'], self.submetric_weights['total']]
 
         self.score = np.round(np.dot(scores, weights), 4)
+        if self.score < 0: self.score = 0;
 
         logger.info("TOTAL Bus Factor Score: " + str(self.score))
 
