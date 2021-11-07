@@ -25,6 +25,7 @@ def run_rank_mode(path):
         repo_paths, module_list = get_repo_paths(urls)
         logger.debug("Repository Paths:")
         logger.debug(str(repo_paths))
+        ret_val = []
 
         # Get attributes for each model
         for module in module_list:
@@ -32,21 +33,16 @@ def run_rank_mode(path):
             get_attributes(module)
             module.popularity_class = Popularity(module.name, module.url)
             module.popularity = module.popularity_class.calculate_popularity()
-            module.correct_class = Correctness(module.name, module.open_issues, module.closed_issues, 2,
-                                               module.popularity)
+            module.correct_class = Correctness(module.name, module.open_issues, module.closed_issues, 2, module.popularity)
             module.license_class = License(module.name, 5, module.readMe)
             module.bus_factor_class = BusFactor(4, module.name, module.stats_contributors, module.commits)
-            module.responsiveness_class = Responsiveness(module.name, module.url, module.open_issues,
-                                                         module.closed_issues, 7)
+            module.responsiveness_class = Responsiveness(module.name, module.url, module.open_issues, module.closed_issues, 7)
             module.ramp_up_class = RampUp(module.name, module.url, module.popularity, 2)
 
-        # Calculate Metrics for each model
-        ret_val = []
-        for module in module_list:
+            # Calculate Metrics for each model
             logger.info(f"Calculating metrics for {module.name}")
             module.calculate_net_score()
             ret_val.append(module.net_score)
-
 
         logger.info("Output module values with their metrics")
         IOUtil.output_to_stdout(module_list)

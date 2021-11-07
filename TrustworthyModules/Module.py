@@ -28,8 +28,8 @@ class Module:
         self.ramp_up_class = None
 
     def __str__(self):
-        return f"{self.original_url} {self.net_score} {self.ramp_up_class.score} {self.correct_class.score} " \
-               f"{self.bus_factor_class.score} {self.responsiveness_class.score} " \
+        return f"{self.original_url} {round(self.net_score, 1)} {round(self.ramp_up_class.score, 1)} {round(self.correct_class.score, 1)} " \
+               f"{round(self.bus_factor_class.score, 1)} {round(self.responsiveness_class.score, 1)} " \
                f"{self.license_class.score}"
 
     def get_weights(self):

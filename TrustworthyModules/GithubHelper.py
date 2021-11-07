@@ -1,16 +1,14 @@
 import re
 import datetime
 from pprint import pprint
-
 import requests
 from github import Github
-
 from Module import Module
-
 from Util import *
-
 from Contributor import *
+from dotenv import load_dotenv
 
+load_dotenv()
 token = os.getenv("GITHUB_TOKEN")
 g = Github(token)
 
@@ -60,7 +58,7 @@ def url_from_npm(package):
 # Get and print issues for a repository
 # can be used for: ramp-up, correctness, responsiveness
 def get_issues(repo_path):
-    repo = g.get_repo(repo_path)
+    repo = g.get_repo(repo_path) #@@@@@@@@@@@@@@
     open_issues = repo.get_issues(state="open")
     closed_issues = repo.get_issues(state="closed")
     return open_issues, closed_issues
@@ -69,7 +67,7 @@ def get_issues(repo_path):
 # Get and print issues for a repository
 # can be used for: ramp-up, correctness, responsiveness
 def get_issues_since(repo_path, since_date):
-    repo = g.get_repo(repo_path)
+    repo = g.get_repo(repo_path) #@@@@@@@@@@@@@@
     open_issues = repo.get_issues(state="open", since=since_date)
     closed_issues = repo.get_issues(state="closed", since=since_date)
     return open_issues, closed_issues
@@ -78,7 +76,7 @@ def get_issues_since(repo_path, since_date):
 # Returns ReadMe content variable
 # can be used for: ramp-up
 def get_readme(repo_path):
-    repo = g.get_repo(repo_path)
+    repo = g.get_repo(repo_path) #@@@@@@@@@@@@@@
     readme = repo.get_readme()
     return readme
 
@@ -97,7 +95,7 @@ def get_readme(repo_path):
 # can get totalCount without exception
 # can be used for: bus factor, responsiveness?
 def get_contributors(repo_path):
-    repo = g.get_repo(repo_path)
+    repo = g.get_repo(repo_path) #@@@@@@@@@@@@@@
     contributors = repo.get_contributors()
     return contributors
 
@@ -106,7 +104,7 @@ def get_contributors(repo_path):
 # can be used for: bus factor
 # StatsContributor Object has : author, total, week
 def get_stats_contributors(repo_path):
-    repo = g.get_repo(repo_path)
+    repo = g.get_repo(repo_path) #@@@@@@@@@@@@@@
     stats_contributors = repo.get_stats_contributors()
 
     contributors = []
@@ -121,13 +119,13 @@ def get_stats_contributors(repo_path):
 # Returns PaginatedList of Commit
 # can be used for: bus factor?, responsiveness,
 def get_commits(repo_path):
-    repo = g.get_repo(repo_path)
+    repo = g.get_repo(repo_path) #@@@@@@@@@@@@@@
     commits = repo.get_commits()
     return commits
 
 
 def get_commits_since(repo_path, date):
-    repo = g.get_repo(repo_path)
+    repo = g.get_repo(repo_path) #@@@@@@@@@@@@@@
     commits_since = repo.get_commits(since=date)
     return commits_since
 
@@ -135,7 +133,7 @@ def get_commits_since(repo_path, date):
 # Returns PaginatedList of Commit
 # can be used for: bus factor?, responsiveness,
 def get_commits_time(repo_path, start_time, end_time):
-    repo = g.get_repo(repo_path)
+    repo = g.get_repo(repo_path) #@@@@@@@@@@@@@@
     commits = repo.get_commits(since=start_time, until=end_time)
     return commits
 
@@ -173,7 +171,7 @@ def get_commits_time(repo_path, start_time, end_time):
 # can be used for: ramp-up, correctness, responsiveness?
 # totalCount looks to cap at 40,000....?
 def get_stargazers(repo_path):
-    repo = g.get_repo(repo_path)
+    repo = g.get_repo(repo_path) #@@@@@@@@@@@@@@
     stargazers = repo.get_stargazers()
     return stargazers
 
@@ -182,7 +180,7 @@ def get_stargazers(repo_path):
 # can be used to determine popularity
 # can be used for: ramp-up, correctness, responsiveness?
 def get_subscribers(repo_path):
-    repo = g.get_repo(repo_path)
+    repo = g.get_repo(repo_path) #@@@@@@@@@@@@@@
     subscribers = repo.get_subscribers()
     return subscribers
 
@@ -190,7 +188,7 @@ def get_subscribers(repo_path):
 # Returns list of StatsCommitActivity
 # can be used for: bus factor?, responsiveness
 def get_stats_commit_activity(repo_path):
-    repo = g.get_repo(repo_path)
+    repo = g.get_repo(repo_path) #@@@@@@@@@@@@@@
     stats_commit_activity = repo.get_stats_commit_activity()
     return stats_commit_activity
 
@@ -200,7 +198,7 @@ def get_stats_commit_activity(repo_path):
 # can be used for: ramp-up, correctness, responsiveness?
 # same as stargazers
 def get_watchers(repo_path):
-    repo = g.get_repo(repo_path)
+    repo = g.get_repo(repo_path) #@@@@@@@@@@@@@@
     watchers = repo.get_watchers()
     return watchers
 
@@ -218,7 +216,7 @@ def get_watchers(repo_path):
 # can be used to determine popularity
 # can be used for: ramp-up, correctness, responsiveness?
 def get_forks(repo_path):
-    repo = g.get_repo(repo_path)
+    repo = g.get_repo(repo_path) #@@@@@@@@@@@@@@
     forks = repo.get_forks()
     return forks
 
