@@ -64,7 +64,7 @@ class RampUp:
 
     def readme_examples_score_calc(self):
         # Check examples in ReadMe or folder files that help people understand the module
-        return self.clone_module()
+        return self.analyze_readme()
 
     def final_score_calculation(self, weights, score_readme_length, score_readme_examples,
                                 score_responsiveness_correctness):
@@ -74,17 +74,9 @@ class RampUp:
                            self.popularity_score])
         return np.round(np.dot(weights, scores), 4)
 
-    def clone_module(self):
-        # Check if the repo already is cloned, if not then clone
-        repo = Repo.clone_from(self.url, self.module_name)  # could maybe use giturl but we dont have that yet
-
+    def analyze_readme(self):
         # Analyze cloned repository
         score = self.module_clone_readme_analyzer()
-
-        # Remove cloned repo
-        cwd = os.getcwd()
-        directory_folder_empty = os.path.join(cwd, self.module_name.split("/")[0])
-        rmtree(directory_folder_empty)
         return score
 
     def module_clone_readme_analyzer(self):
