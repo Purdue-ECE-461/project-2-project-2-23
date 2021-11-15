@@ -12,6 +12,7 @@ from BusFactor import BusFactor
 from Popularity import Popularity
 from Responsiveness import Responsiveness
 from RampUp import RampUp
+from Dependency import Dependency
 
 logger = get_logger('Main')
 logger.info("Logger init in Main.py")
@@ -38,10 +39,13 @@ def run_rank_mode(path):
             module.bus_factor_class = BusFactor(4, module.name, module.stats_contributors, module.commits)
             module.responsiveness_class = Responsiveness(module.name, module.url, module.open_issues, module.closed_issues, 7)
             module.ramp_up_class = RampUp(module.name, module.url, module.popularity, 2)
+            module.dependency_class = Dependency(module.name, module.url, 4)
 
             # Calculate Metrics for each model
             logger.info(f"Calculating metrics for {module.name}")
+            module.clone_repo()
             module.calculate_net_score()
+            module.remove_repo()
             ret_val.append(module.net_score)
 
         logger.info("Output module values with their metrics")

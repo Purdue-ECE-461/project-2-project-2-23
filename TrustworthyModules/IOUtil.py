@@ -27,7 +27,7 @@ def read_input_file(filepath):
 
 def output_to_stdout(module_list):
     first_line = ['URLS', 'NET_SCORE', 'RAMP_UP_SCORE', 'CORRECTNESS_SCORE', 'BUS_FACTOR_SCORE',
-                  'RESPONSIVENESS_SCORE', 'LICENSE_SCORE']
+                  'RESPONSIVENESS_SCORE', 'DEPENDENCY_SCORE', 'LICENSE_SCORE']
 
     # Write title line
     print(" ".join(first_line))
