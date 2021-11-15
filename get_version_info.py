@@ -25,8 +25,8 @@ def get_version_info(doc_loc):
 
 
 
-    except:
-        return -1
+    except: # if somehow not work, return to least case of the counters
+        return {"c1":1,"c2":1}
 
 
 if __name__ == '__main__':
