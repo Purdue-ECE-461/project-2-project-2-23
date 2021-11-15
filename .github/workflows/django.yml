@@ -30,8 +30,7 @@ jobs:
     - name: Run Django Tests
       run: python manage.py test
     - name: Run Trustworthy Module Testing
-      working-directory: ./TrustworthyModules
-      shell: bash
       run: |
-        run install
-        run test
+         python -m pip install pytest
+         python RunTests.py
+      working-directory: ./TrustworthyModules
