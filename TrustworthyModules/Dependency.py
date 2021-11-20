@@ -12,11 +12,9 @@ class Dependency:
     def calculate_score(self):
         #try:
         package_json = ''
-        print(((self.module_name.split('/'))[0]))
 
         found_json = False
         for (dirs, dir, check_json) in walk((self.module_name.split('/'))[0]):
-            print(check_json)
             for check_per in check_json:
                 if 'package.json' in check_per:
                     found_json = True
@@ -32,7 +30,6 @@ class Dependency:
         dep_flag = False
         for line in json_lines:
             line = str(line.rstrip())
-            print(line)
 
             if re.search(r'}', line) is not None:
                 dep_flag = False

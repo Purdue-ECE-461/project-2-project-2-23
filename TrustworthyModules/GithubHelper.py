@@ -8,6 +8,7 @@ from Util import *
 from Contributor import *
 from dotenv import load_dotenv
 
+
 load_dotenv()
 token = os.getenv("GITHUB_TOKEN")
 g = Github(token)
