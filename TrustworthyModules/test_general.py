@@ -55,9 +55,9 @@ def test_total_contributors():
     sample_mod.stats_contributors = GithubHelper.get_stats_contributors('jonschlinkert/even')
     wks = sample_mod.stats_contributors[0].weeks
 
-    c1 = Contributor.Contributor('me', 90, wks, '1')
-    c2 = Contributor.Contributor('me', 90, wks, '1')
-    c3 = Contributor.Contributor('me', 89, wks, '1')
+    c1 = Contributor('me', 90, wks, '1')
+    c2 = Contributor('me', 90, wks, '1')
+    c3 = Contributor('me', 89, wks, '1')
 
     busObj = BusFactor(7, 'test', [c1, c2, c3], None)
 
@@ -334,14 +334,20 @@ def test_weights_specific():
 
 def call_tests():
     num_passed = 0
-    total = 21
+    total = 27
 
-    num_passed += test_npm_to_github()
-    num_passed += test_read_input()
-    num_passed += test_verify_path()
-    num_passed += test_end_to_end_jquery()
     num_passed += test_end_to_end_even()
+    num_passed += test_end_to_end_jquery()
+    num_passed += test_verify_path()
+    num_passed += test_read_input()
     num_passed += test_calculate_std()
+    num_passed += test_total_contributors()
+    num_passed += test_get_commits()
+    num_passed += test_get_year_commit_ratio()
+    num_passed += test_bus_factor()
+    num_passed += test_bus_factor_none()
+    num_passed += test_bus_factor_empty()
+    num_passed += test_npm_to_github()
     num_passed += test_responsiveness()
     num_passed += test_responsiveness_no_issues()
     num_passed += test_ramp_up()
