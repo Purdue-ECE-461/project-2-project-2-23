@@ -1,3 +1,4 @@
+
 class Contributor:
     def __init__(self, name, num_commits, weeks, uid):
         self.name = name

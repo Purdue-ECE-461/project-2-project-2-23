@@ -1,29 +1,20 @@
 import datetime
-import math
-
 import pytest
+import sys
 
-import BusFactor
-import Contributor
-import Correctness
-import GithubHelper
-import IOUtil
-import License
-import Main
-import Metric
 from Module import Module
-import ModuleHelper
-import Popularity
-import Responsiveness
-import Users
-import Util
-from ModuleHelper import get_attributes
+import Main
+import IOUtil
+import GithubHelper
+from Users import get_number_users
+from Contributor import Contributor
 from Correctness import Correctness
 from License import License
 from BusFactor import BusFactor, calculate_std
 from Popularity import Popularity
 from Responsiveness import Responsiveness
 from RampUp import RampUp
+from Dependency import Dependency
 
 
 # end to end test of low performing repo
@@ -198,17 +189,17 @@ def test_ramp_up_low():
 
 
 def test_get_users():
-    num_users = Users.get_number_users('https://github.com/expressjs/express')
+    num_users = get_number_users('https://github.com/expressjs/express')
     assert num_users > 1000000
 
 
 def test_get_users_low():
-    num_users = Users.get_number_users('https://github.com/jonschlinkert/even')
+    num_users = get_number_users('https://github.com/jonschlinkert/even')
     assert num_users is None
 
 
 def test_get_users_zero():
-    num_users = Users.get_number_users('https://github.com/sguadav/Predicting_soccer_results')
+    num_users = get_number_users('https://github.com/sguadav/Predicting_soccer_results')
     assert num_users is None
 
 
@@ -302,25 +293,25 @@ def test_weights_specific():
 
 
 if __name__ == "__main__":
-    # test_npm_to_github()
-    # test_read_input()
-    # test_verify_path()
-    # test_end_to_end_jquery()
+    test_npm_to_github()
+    test_read_input()
+    test_verify_path()
+    test_end_to_end_jquery()
     test_end_to_end_even()
-    # test_calculate_std()
-    # test_responsiveness()
-    # test_responsiveness_no_issues()
-    # test_ramp_up()
-    # test_ramp_up_low()
-    # test_get_users()
-    # test_get_users_low()
-    # test_get_users_zero()
-    # test_popularity()
-    # test_popularity_low()
-    # test_correctness_low()
-    # test_correctness_high()
-    # test_license_low()
-    # test_license_high()
-    # test_weights_general()
-    # test_weights_specific()
+    test_calculate_std()
+    test_responsiveness()
+    test_responsiveness_no_issues()
+    test_ramp_up()
+    test_ramp_up_low()
+    test_get_users()
+    test_get_users_low()
+    test_get_users_zero()
+    test_popularity()
+    test_popularity_low()
+    test_correctness_low()
+    test_correctness_high()
+    test_license_low()
+    test_license_high()
+    test_weights_general()
+    test_weights_specific()
 
