@@ -54,7 +54,7 @@ class Module:
         for metric in metric_list:
             priorities.append(metric.priority)
         total = sum(priorities)
-        self.weights = [priority / total for priority in priorities]
+        self.weights = [round((priority / total), 2) for priority in priorities]
 
     def run_score_calculations(self):
         logger.debug("Running metric score calculations")

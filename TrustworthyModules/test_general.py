@@ -20,28 +20,33 @@ from Dependency import Dependency
 # end to end test of low performing repo
 def test_end_to_end_even():
     module_list = Main.run_rank_mode('test_files/even.txt')
-    assert module_list[0] < 0.8
+    if module_list[0] < 0.8: return 1
+    else: return 0
 
 
 # end to end test of high performing repo
 def test_end_to_end_jquery():
     module_list = Main.run_rank_mode('test_files/single_test_file.txt')
-    assert module_list[0] > 0.5
+    if module_list[0] > 0.4: return 1
+    else: return 0
 
 
 # check that an invalid path is caught
 def test_verify_path():
-    assert IOUtil.verify_path("xxd") == -1
+    if IOUtil.verify_path("xxd") == -1: return 1
+    else: return 0
 
 
 # check that input files are read properly
 def test_read_input():
-    assert IOUtil.read_input_file('test_files/test_file') == ["https://github.com/jquery/jquery"]
+    if IOUtil.read_input_file('test_files/test_file') == ["https://github.com/jquery/jquery"]: return 1
+    else: return 0
 
 
 # validate standard deviation calculation in BusFactor
 def test_calculate_std():
-    assert calculate_std([1, 1, 1, 1]) - 0.195959 < 0.001
+    if calculate_std([1, 1, 1, 1]) - 0.195959 < 0.001: return 1
+    else: return 0
 
 
 # test that correct number of total contributors is obtained in BusFactor creation
@@ -58,14 +63,16 @@ def test_total_contributors():
 
     total_cont = busObj.total_contributors
 
-    assert total_cont == 3
+    if total_cont == 3: return 1
+    else: return 0
 
 
 # test that the correct number of commits is fetched
 def test_get_commits():
     commits = GithubHelper.get_commits('jonschlinkert/eval-estree-expression')
     count = commits.totalCount
-    assert count >= 32
+    if count >= 32: return 1
+    else: return 0
 
 
 # test that the correct commit ratio for the past year is calculated
@@ -75,7 +82,8 @@ def test_get_year_commit_ratio():
 
     commits = GithubHelper.get_commits('jonschlinkert/eval-estree-expression')
     ratio = GithubHelper.last_year_commit_ratio('jonschlinkert/eval-estree-expression', commits)
-    assert ratio == 1.0
+    if ratio == 1.0: return 1
+    else: return 0
 
 
 # test that bus factor calculation returns a correct score
@@ -86,7 +94,8 @@ def test_bus_factor():
 
     bus_factor.calculate_score()
 
-    assert bus_factor.score > 0.5
+    if bus_factor.score > 0.5: return 1
+    else: return 0
 
 
 # test that bus factor calculation returns a correct score
@@ -97,7 +106,9 @@ def test_bus_factor_none():
 
     bus_factor.calculate_score()
 
-    assert bus_factor.score == 0
+    if bus_factor.score == 0: return 1
+    else: return 0
+
 
 # test that bus factor calculation returns a correct score
 def test_bus_factor_empty():
@@ -107,7 +118,8 @@ def test_bus_factor_empty():
 
     bus_factor.calculate_score()
 
-    assert bus_factor.score == 0
+    if bus_factor.score == 0: return 1
+    else: return 0
 
 
 # test that npm urls convert to github urls correctly
@@ -125,7 +137,8 @@ def test_npm_to_github():
         if val == github_urls[i]:
             correct += 1
 
-    assert correct == len(npm_urls)
+    if correct == len(npm_urls): return 1
+    else: return 0
 
 
 def test_responsiveness():
@@ -134,7 +147,8 @@ def test_responsiveness():
 
     resp.calculate_responsiveness()
 
-    assert resp.score > 0.5
+    if resp.score > 0.5: return 1
+    else: return 0
 
 
 def test_responsiveness_no_issues():
@@ -143,76 +157,94 @@ def test_responsiveness_no_issues():
 
     resp.calculate_responsiveness()
 
-    assert resp.score == 0.5
+    if resp.score == 0.5: return 1
+    else: return 0
 
 
 def test_ramp_up():
     # Get popularity
-    popularity = Popularity('expressjs/express', 'https://github.com/expressjs/express')
+    name = 'expressjs/express'
+    url = 'https://github.com/expressjs/express'
+    popularity = Popularity(name, url)
     popularity_score = popularity.calculate_popularity()
 
     # Get responsiveness
     open_issues, closed_issues = GithubHelper.get_issues('expressjs/express')
-    resp = Responsiveness('expressjs/express', 'https://github.com/expressjs/express', open_issues, closed_issues, 0)
+    resp = Responsiveness(name, url, open_issues, closed_issues, 0)
     resp.calculate_responsiveness()
 
     # Get correctness
-    correctness = Correctness('expressjs/express', open_issues, closed_issues, [], popularity_score)
+    correctness = Correctness(name, open_issues, closed_issues, [], popularity_score)
     correctness.calculate_score()
 
     # Calculate RampUp
-    ramp_up = RampUp('expressjs/express', 'https://github.com/expressjs/express', popularity_score, 0)
+    ugh = Module(name, url, url)
+    ugh.clone_repo()
+    ramp_up = RampUp(name, url, popularity_score, 0)
     ramp_up.calculate_ramp_up(resp.score, correctness.score)
+    ugh.remove_repo()
 
-    assert ramp_up.score > 0.5
+    if ramp_up.score > 0.5: return 1
+    else: return 0
 
 
 def test_ramp_up_low():
     # Get popularity
-    popularity = Popularity('jonschlinkert/even', 'https://github.com/jonschlinkert/even')
+    name = 'jonschlinkert/even'
+    url = 'https://github.com/jonschlinkert/even'
+    popularity = Popularity(name, url)
     popularity_score = popularity.calculate_popularity()
 
     # Get responsiveness
-    open_issues, closed_issues = GithubHelper.get_issues('expressjs/express')
-    resp = Responsiveness('jonschlinkert/even', 'https://github.com/jonschlinkert/even', open_issues, closed_issues, 0)
+    open_issues, closed_issues = GithubHelper.get_issues('jonschlinkert/even')
+    resp = Responsiveness(name, url, open_issues, closed_issues, 0)
     resp.calculate_responsiveness()
 
     # Get correctness
-    correctness = Correctness('jonschlinkert/even', open_issues, closed_issues, [], popularity_score)
+    correctness = Correctness(name, open_issues, closed_issues, [], popularity_score)
     correctness.calculate_score()
 
     # Calculate RampUp
-    ramp_up = RampUp('jonschlinkert/even', 'https://github.com/jonschlinkert/even', popularity_score, 0)
+    ugh = Module(name, url, url)
+    ugh.clone_repo()
+    ramp_up = RampUp(name, url, popularity_score, 0)
     ramp_up.calculate_ramp_up(resp.score, correctness.score)
+    ugh.remove_repo()
 
-    assert ramp_up.score < 0.6
+    if ramp_up.score < 0.6: return 1
+    else: return 0
 
 
 def test_get_users():
     num_users = get_number_users('https://github.com/expressjs/express')
-    assert num_users > 1000000
+    if num_users > 1000000: return 1
+    else: return 0
 
 
 def test_get_users_low():
     num_users = get_number_users('https://github.com/jonschlinkert/even')
-    assert num_users is None
+    if num_users is None: return 1
+    else: return 0
 
 
 def test_get_users_zero():
     num_users = get_number_users('https://github.com/sguadav/Predicting_soccer_results')
-    assert num_users is None
+    if num_users is None: return 1
+    else: return 0
 
 
 def test_popularity():
     popularity = Popularity('expressjs/express', 'https://github.com/expressjs/express')
     popularity_score = popularity.calculate_popularity()
-    assert popularity_score > 0.5
+    if popularity_score > 0.5: return 1
+    else: return 0
 
 
 def test_popularity_low():
     popularity = Popularity('jonschlinkert/even', 'https://github.com/jonschlinkert/even')
     popularity_score = popularity.calculate_popularity()
-    assert popularity_score < 0.5
+    if popularity_score < 0.5: return 1
+    else: return 0
 
 
 def test_correctness_low():
@@ -222,7 +254,8 @@ def test_correctness_low():
     popularity = Popularity(path, 'https://github.com/nullivex/nodist')
     popularity_score = popularity.calculate_popularity()
     correctness = Correctness(path, open_issues, closed_issues, priority, popularity_score)
-    assert correctness.score < 0.5
+    if correctness.score < 0.5: return 1
+    else: return 0
 
 
 def test_correctness_high():
@@ -233,16 +266,18 @@ def test_correctness_high():
     popularity_score = popularity.calculate_popularity()
     correctness = Correctness(path, open_issues, closed_issues, priority, popularity_score)
     correctness.calculate_score()
-    assert correctness.score > 0.5
+    if correctness.score > 0.5: return 1
+    else: return 0
 
 
 def test_license_low():
-    path = 'Purdue-ECE-461/project-1-team-22'
+    path = 'dbatides/3issues_2commits'
     priority = 5
     readMe = GithubHelper.get_readme(path)
     license = License(path, priority, readMe)
     license.calculate_score()
-    assert license.score == 0
+    if license.score == 0: return 1
+    else: return 0
 
 
 def test_license_high():
@@ -251,12 +286,13 @@ def test_license_high():
     readMe = GithubHelper.get_readme(path)
     license = License(path, priority, readMe)
     license.calculate_score()
-    assert license.score == 1
+    if license.score == 1: return 1
+    else: return 0
 
 
 def test_weights_general():
-    path = 'Purdue-ECE-461/project-1-team-22'
-    url = 'https://github.com/Purdue-ECE-461/project-1-team-22'
+    path = 'johnthebrit/RandomStuff'
+    url = 'https://github.com/johnthebrit/RandomStuff'
     module = Module(path, url, url)
     open_issues, closed_issues = GithubHelper.get_issues(path)
     readMe = GithubHelper.get_readme(path)
@@ -268,14 +304,16 @@ def test_weights_general():
     module.bus_factor_class = BusFactor(5, path, stats_contributors, commits)
     module. responsiveness_class = Responsiveness(path, url, open_issues, closed_issues, 5)
     module.ramp_up_class = RampUp(path, url, 0, 5)
+    module.dependency_class = Dependency(path, url, 5)
 
     module.get_weights()
-    assert module.weights == [.2, .2, .2, .2, .2]
+    if module.weights == [0.17, 0.17, 0.17, 0.17, 0.17, 0.17]: return 1
+    else: return 0
 
 
 def test_weights_specific():
-    path = 'Purdue-ECE-461/project-1-team-22'
-    url = 'https://github.com/Purdue-ECE-461/project-1-team-22'
+    path = 'SadProcessor/SomeStuff'
+    url = 'https://github.com/SadProcessor/SomeStuff'
     module = Module(path, url, url)
     open_issues, closed_issues = GithubHelper.get_issues(path)
     readMe = GithubHelper.get_readme(path)
@@ -287,31 +325,37 @@ def test_weights_specific():
     module.bus_factor_class = BusFactor(4, path, stats_contributors, commits)
     module. responsiveness_class = Responsiveness(path, url, open_issues, closed_issues, 7)
     module.ramp_up_class = RampUp(path, url, 0, 2)
+    module.dependency_class = Dependency(path, url, 4)
 
     module.get_weights()
-    assert module.weights == [.35, .25, .2, .1, .1]
+    if module.weights == [0.29, 0.21, 0.17, 0.08, 0.08, 0.17]: return 1
+    else: return 0
 
 
-if __name__ == "__main__":
-    test_npm_to_github()
-    test_read_input()
-    test_verify_path()
-    test_end_to_end_jquery()
-    test_end_to_end_even()
-    test_calculate_std()
-    test_responsiveness()
-    test_responsiveness_no_issues()
-    test_ramp_up()
-    test_ramp_up_low()
-    test_get_users()
-    test_get_users_low()
-    test_get_users_zero()
-    test_popularity()
-    test_popularity_low()
-    test_correctness_low()
-    test_correctness_high()
-    test_license_low()
-    test_license_high()
-    test_weights_general()
-    test_weights_specific()
+def call_tests():
+    num_passed = 0
+    total = 21
 
+    num_passed += test_npm_to_github()
+    num_passed += test_read_input()
+    num_passed += test_verify_path()
+    num_passed += test_end_to_end_jquery()
+    num_passed += test_end_to_end_even()
+    num_passed += test_calculate_std()
+    num_passed += test_responsiveness()
+    num_passed += test_responsiveness_no_issues()
+    num_passed += test_ramp_up()
+    num_passed += test_ramp_up_low()
+    num_passed += test_get_users()
+    num_passed += test_get_users_low()
+    num_passed += test_get_users_zero()
+    num_passed += test_popularity()
+    num_passed += test_popularity_low()
+    num_passed += test_correctness_low()
+    num_passed += test_correctness_high()
+    num_passed += test_license_low()
+    num_passed += test_license_high()
+    num_passed += test_weights_general()
+    num_passed += test_weights_specific()
+
+    return (num_passed, total)
