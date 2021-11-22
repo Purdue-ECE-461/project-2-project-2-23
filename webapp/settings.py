@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-0=rk)5m0c%xrdz338)!$2%hv=iy2*o)3d=@fqw0e1!_eqp!6g9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ece461-project-2-23.ue.r.appspot.com']
+ALLOWED_HOSTS = ['ece461-project-2-23.ue.r.appspot.com','127.0.0.1']
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -105,6 +106,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # This code is only for testing and learning, and will be deleted finally.
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }

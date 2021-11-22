@@ -40,7 +40,6 @@ if __name__ == "__main__":
     coverage = cov_data['totals']['percent_covered']'''
 
     cov = tot_coverage.report()
-    tot_coverage.html_report()
     tot_coverage.stop()
     enablePrint()
     print("Total: {}".format(total_tests))
