@@ -6,7 +6,7 @@ class TestApiSerializer(serializers.ModelSerializer):
         model = TestApi
         fields = ('id','title')
 
-class ModulePackageSerializer(serializers.ModelSerializer):
+class ListPackageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ModulePackage
-        fields = ('name','id', 'version')
+        fields = ('Name', 'Version', 'ID')
