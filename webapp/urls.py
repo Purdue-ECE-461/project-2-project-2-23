@@ -18,6 +18,8 @@ from django.urls import path
 from django.urls import include
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
+from django.conf.urls import url,include 
+from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 
 from webapp import views
 
@@ -32,8 +34,9 @@ router.register(r'groups', views.GroupViewSet)
 
 
 urlpatterns = [
+    url(r'^',include('rest_api.urls')),
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('authentication/',obtain_auth_token,name="authentication")
+    path('authentication/',TokenObtainPairView.as_view(),name="token_obtain_pair")
 ]
