@@ -8,7 +8,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import serializers, status
 
 from rest_api.models import ModulePackage, TestApi
-from rest_api.serializers import TestApiSerializer, ListPackageSerializer
+from rest_api.serializers import PackageCreationSerializer, TestApiSerializer, ListPackageSerializer
 from rest_framework.decorators import api_view
 
 # Create your views here.
@@ -53,21 +53,25 @@ def package_list(request):
         return JsonResponse(package_serializer.data,safe=False)
 
 from django.shortcuts import get_object_or_404
+from django.db import IntegrityError
 class ModulePackageViewer(ListAPIView):
     queryset = ModulePackage.objects.all()
     serializer_class = ListPackageSerializer #subject to change
 
     def get(self, request, pk, *args, **kwargs):
         package = get_object_or_404(ModulePackage,ID=self.kwargs.get('pk'))
-        serializer = ListPackageSerializer(package)
+        serializer = PackageCreationSerializer(package)
         return JsonResponse(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request):
-        package_data = JSONParser().parse(request)
-        package_serializer = ListPackageSerializer(data=package_data)
+        #package_data = JSONParser().parse(request)
+        package_serializer = PackageCreationSerializer(data=request.data)
         if package_serializer.is_valid():
-            package_serializer.save()
-            return JsonResponse(package_serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                package_serializer.save()
+                return JsonResponse(package_serializer.data, status=status.HTTP_201_CREATED)
+            except IntegrityError:
+                return JsonResponse({'message':'Object already exists!'},status=status.HTTP_400_BAD_REQUEST)
         return JsonResponse(package_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def put(self, request, pk, *args, **kwargs):
