@@ -65,14 +65,14 @@ class ModulePackageViewer(ListAPIView):
     def get(self, request, pk, *args, **kwargs):
         package = get_object_or_404(ModulePackage,ID=self.kwargs.get('pk'))
         serializer = PackageCreationSerializer(package)
-        return JsonResponse(serializer.data, status=status.HTTP_200_OK)
+        return JsonResponse(serializer.data["metadata"], status=status.HTTP_200_OK)
     
     def post(self, request):
         package_serializer = PackageCreationSerializer(data=request.data)
         if package_serializer.is_valid():
             try:
                 package_serializer.save()
-                return JsonResponse(package_serializer.data, status=status.HTTP_201_CREATED)
+                return JsonResponse(package_serializer.data["metadata"], status=status.HTTP_201_CREATED)
             except IntegrityError:
                 return JsonResponse({'message':'Object already exists!'},status=status.HTTP_400_BAD_REQUEST)
         return JsonResponse(package_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
