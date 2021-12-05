@@ -125,11 +125,15 @@ class ModulePackageTestCase(TestCase):
 
     # ============= POST Testing ============ #
     def test_post_unauthorized(self):
+
+        # Test Unauthorized Package request
         request = self.factory.post(self.pkg_endpoint,data=data,format='json')
         response = (ModulePackageViewer.as_view())(request)
         self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
 
     def test_post_authorized(self):
+
+        # Test Authorized Package request
         request = self.factory.post(self.pkg_endpoint,data=data,format='json')
         force_authenticate(request=request,user=self.user)
         response = (ModulePackageViewer.as_view())(request)
@@ -139,11 +143,15 @@ class ModulePackageTestCase(TestCase):
 
     # ============= GET Testing ============ #
     def test_get_unauthorized(self):
+
+        # Test Unauthorized Package request
         request = self.factory.get(self.pkg_endpoint,kwargs={'pk':'TestModule1'})
         response = (ModulePackageViewer.as_view())(request,pk='TestModule1')
         self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
 
     def test_get_authorized(self):
+        
+        # Test Authorized Package request
         request = self.factory.get(self.pkg_endpoint,kwargs={'pk':'TestModule1'})
         force_authenticate(request=request,user=self.user)
         response = (ModulePackageViewer.as_view())(request,pk='TestModule1')
@@ -162,7 +170,25 @@ class ModulePackageTestCase(TestCase):
         self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
     
     def test_put_authorized(self):
+
+        # Test Authorized Package request
         request = self.factory.put(self.pkg_endpoint,data=update_data,kwargs={'pk':'TestModule1'},format='json')
         force_authenticate(request=request,user=self.user)
         response = (ModulePackageViewer.as_view())(request,pk='TestModule1')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+    # ============= DELETE Testing ============ #
+    def test_delete_unauthorized(self):
+
+        # Test Unauthorized Package request
+        request = self.factory.delete(self.pkg_endpoint)
+        response = (ModulePackageViewer.as_view())(request,pk='TestModule1')
+        self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
+
+    def test_delete_unauthorized(self):
+
+        # Test Authorized Package request    
+        request = self.factory.delete(self.pkg_endpoint)
+        force_authenticate(request=request,user=self.user)
+        response = (ModulePackageViewer.as_view())(request,pk='TestModule1')
+        self.assertEqual(response.status_code,status.HTTP_204_NO_CONTENT)
