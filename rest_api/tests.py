@@ -185,7 +185,7 @@ class ModulePackageTestCase(TestCase):
         response = (ModulePackageViewer.as_view())(request,pk='TestModule1')
         self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
 
-    def test_delete_unauthorized(self):
+    def test_delete_authorized(self):
 
         # Test Authorized Package request    
         request = self.factory.delete(self.pkg_endpoint)
