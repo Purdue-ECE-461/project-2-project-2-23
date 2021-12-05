@@ -188,7 +188,7 @@ class ModulePackageTestCase(TestCase):
     # This function below should give HTTP_204 but it return 200, needed to be refined,
     # Currently the contents below are just commented out...
 
-    # def test_delete_authorized(self):
+    def test_delete_authorized(self):
 
         # Test Authorized Package request    
         request = self.factory.delete(self.pkg_endpoint,kwargs={'pk':'TestModule1'})
