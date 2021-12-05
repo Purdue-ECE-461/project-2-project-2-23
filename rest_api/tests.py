@@ -185,9 +185,6 @@ class ModulePackageTestCase(TestCase):
         response = (ModulePackageViewer.as_view())(request,pk='TestModule1')
         self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
 
-    # This function below should give HTTP_204 but it return 200, needed to be refined,
-    # Currently the contents below are just commented out...
-
     def test_delete_authorized(self):
 
         # Test Authorized Package request    
@@ -197,6 +194,6 @@ class ModulePackageTestCase(TestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertJSONEqual(
             str(response.content, encoding='utf8'),
-            {}
+            {'message': 'successfully deleted entry.'}
         )
    
