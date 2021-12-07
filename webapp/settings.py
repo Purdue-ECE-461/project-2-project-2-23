@@ -10,18 +10,48 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from logging import PlaceHolder
 from pathlib import Path
 from datetime import timedelta
+
+import io
+import os
+
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+env = environ.Env()
+env_file = os.path.join(BASE_DIR,".env")
+
+if os.path.isfile(env_file):
+    # Use local .env file for secrets
+    env.read_env(env_file)
+elif os.getenv("CI",None):
+    # Needed for CI testing
+    test_vals = (
+        f"SECRET_KEY=a\n"
+    )
+    env.read_env(io.StringIO(test_vals))
+elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
+    from google.cloud import secretmanager
+
+    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
+
+    client = secretmanager.SecretManagerServiceClient()
+    settings_name = os.environ.get("SETTINGS_NAME","django_settings")
+    name = f"projects/{project_id}/secrets/{settings_name}/version/latest"
+    payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
+
+    env.read_env(io.StringIO(payload))
+
 # Quick-start development settings - unsINSTALLEDuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0=rk)5m0c%xrdz338)!$2%hv=iy2*o)3d=@fqw0e1!_eqp!6g9'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -77,13 +107,15 @@ WSGI_APPLICATION = 'webapp.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if os.path.isfile(env_file):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / env('DATABASE_NAME'),
+        }
     }
-}
+else:
+    DATABASES = {"default":env.db()}
 
 
 # Password validation

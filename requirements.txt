@@ -4,3 +4,5 @@ python-dotenv
 djangorestframework-simplejwt
 drf-writable-nested
 requests
+django-environ
+google-cloud-storage
