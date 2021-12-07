@@ -33,6 +33,7 @@ elif os.getenv("CI",None):
     # Needed for CI testing
     test_vals = (
         f"SECRET_KEY=a\n"
+        f"DATABASE_URL=sqlite://{os.path.join(BASE_DIR, 'db.sqlite3')}"
     )
     env.read_env(io.StringIO(test_vals))
 elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
