@@ -43,7 +43,7 @@ elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
 
     client = secretmanager.SecretManagerServiceClient()
     settings_name = os.environ.get("SETTINGS_NAME","deploy-settings")
-    name = f"projects/{project_id}/secrets/{settings_name}/version/latest"
+    name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
     payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
 
     env.read_env(io.StringIO(payload))
