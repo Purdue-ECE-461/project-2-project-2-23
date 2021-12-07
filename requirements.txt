@@ -5,4 +5,5 @@ djangorestframework-simplejwt
 drf-writable-nested
 requests
 django-environ
-google-cloud-storage
+psycopg2-binary==2.9.2
+google-cloud-secret-manager==2.8.0
