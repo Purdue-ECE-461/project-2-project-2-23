@@ -19,8 +19,8 @@ class PackageMetaSerializer(serializers.Serializer):
     ID = serializers.CharField()
 
 class PackageDataSerializer(serializers.Serializer):
-    Content = serializers.CharField()
-    URL = serializers.CharField()
+    Content = serializers.CharField(required=False,default='')
+    URL = serializers.CharField(required=False,default='')
     JSProgram = serializers.CharField()
 
 class PackageCreationSerializer(WritableNestedModelSerializer):
