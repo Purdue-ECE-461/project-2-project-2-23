@@ -33,7 +33,6 @@ elif os.getenv("CI",None):
     # Needed for CI testing
     test_vals = (
         f"SECRET_KEY=a\n"
-        f"DATABASE_URL=sqlite://{os.path.join(BASE_DIR, 'db.sqlite3')}"
     )
     env.read_env(io.StringIO(test_vals))
 elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
@@ -108,7 +107,7 @@ WSGI_APPLICATION = 'webapp.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-if os.path.isfile(env_file):
+if os.path.isfile(env_file) or os.getenv("CI",None):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
