@@ -117,6 +117,9 @@ if os.path.isfile(env_file) or os.getenv("CI",None):
     }
 else:
     DATABASES = {"default":env.db()}
+    if os.getenv("USE_CLOUD_SQL_AUTH_PROXY"):
+        DATABASES["default"]["HOST"] = "127.0.0.1"
+        DATABASES["default"]["PORT"] = 5432
 
 
 # Password validation

@@ -62,7 +62,6 @@ class TestApiTestCase(TestCase):
         self.assertIsNotNone(t_obj2)
     
     def test_api_creation(self):
-        '''TEST API RESPONSES'''
         # Case 1: No authorization provided
         request = self.factory.post(self.endpoint, data={'title':'testData'})
         response = test_list(request)

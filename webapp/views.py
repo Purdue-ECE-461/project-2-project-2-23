@@ -2,11 +2,18 @@
 # https://www.django-rest-framework.org/tutorial/quickstart/
 # This code is only for testing and learning, and will be deleted finally.
 
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from rest_framework import viewsets
 from rest_framework import permissions
-from webapp.serializers import UserSerializer, GroupSerializer
+from rest_framework_simplejwt.views import TokenViewBase
+from webapp import serializers
 
+from webapp.serializers import AuthenticationSerializer, UserSerializer
+
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.http import JsonResponse
+from django.contrib.auth import authenticate
 
 class UserViewSet(viewsets.ModelViewSet):
 
@@ -14,9 +21,5 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-
-class GroupViewSet(viewsets.ModelViewSet):
-
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class authView(TokenViewBase):
+    serializer_class = AuthenticationSerializer
