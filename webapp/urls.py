@@ -30,7 +30,6 @@ router = routers.DefaultRouter()
 # This code is only for testing and learning, and will be deleted finally.
 
 router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
 
 
 urlpatterns = [
