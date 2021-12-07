@@ -32,6 +32,7 @@ if os.path.isfile(env_file):
 elif os.getenv("CI",None):
     # Needed for CI testing
     test_vals = (
+        f"DATABASE_NAME=db.sqlite3\n"
         f"SECRET_KEY=a\n"
     )
     env.read_env(io.StringIO(test_vals))
