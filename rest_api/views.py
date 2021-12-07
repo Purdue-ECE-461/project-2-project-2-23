@@ -54,6 +54,17 @@ def package_list(request):
         package_serializer = ListPackageSerializer(packages,many=True)
         return JsonResponse(package_serializer.data,safe=False)
 
+@api_view(['GET','DELETE'])
+def package_by_name(request,pk):
+    #TODO: Retreive the package associated with the name of the request (pk)
+
+    if request.method == 'GET':
+        #TODO: Implement version history retreival
+        pass
+    if request.method == 'DELETE':
+        #TODO: Implement deletion by name
+        pass
+    
 # Class-based Views Below:
 
 from django.shortcuts import get_object_or_404
