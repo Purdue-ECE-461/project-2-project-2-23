@@ -25,7 +25,7 @@ def read_input_file(filepath):
     return urls
 
 
-def output_to_stdout(module_list):
+def output_to_stdout(module):
     first_line = ['URLS', 'NET_SCORE', 'RAMP_UP_SCORE', 'CORRECTNESS_SCORE', 'BUS_FACTOR_SCORE',
                   'RESPONSIVENESS_SCORE', 'DEPENDENCY_SCORE', 'LICENSE_SCORE']
 
@@ -34,10 +34,8 @@ def output_to_stdout(module_list):
     logger.debug(" ".join(first_line))
 
     # Write module information
-    sorted_module_list = sort_module_list(module_list)
-    for module in sorted_module_list:
-        print(str(module))
-        logger.debug(str(module))
+    print(str(module))
+    logger.debug(str(module))
     return
 
 
