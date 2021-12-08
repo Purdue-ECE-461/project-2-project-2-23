@@ -7,14 +7,16 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
-class AuthenticationSerializer(TokenObtainPairSerializer):
-    def validate(self,attrs):
-        data = super().validate(attrs)
-        refresh = self.get_token(self.user)
-        ret_data['token'] = data['access']
-        return ret_data
-
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ['url', 'username', 'email', 'groups']
+
+class AuthenticationSerializer(TokenObtainPairSerializer):
+    class Meta:
+        model = User
+        fields = ['username','password']
+
+    def validate(self,attrs):
+        data = super(AuthenticationSerializer,self).validate(attrs)
+        return 'bearer '+data['access']

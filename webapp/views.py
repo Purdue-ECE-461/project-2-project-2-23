@@ -3,9 +3,11 @@
 # This code is only for testing and learning, and will be deleted finally.
 
 from django.contrib.auth.models import User
+from django.http.response import HttpResponse
 from rest_framework import viewsets
 from rest_framework import permissions
-from rest_framework_simplejwt.views import TokenViewBase
+from rest_framework.status import HTTP_200_OK
+from rest_framework_simplejwt.views import TokenObtainPairView
 from webapp import serializers
 
 from webapp.serializers import AuthenticationSerializer, UserSerializer
@@ -21,5 +23,5 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class authView(TokenViewBase):
+class CustomTokenObtainView(TokenObtainPairView):
     serializer_class = AuthenticationSerializer

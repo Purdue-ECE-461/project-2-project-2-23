@@ -7,11 +7,18 @@ from rest_framework.generics import ListAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework import serializers, status
 
-from rest_api.models import ModulePackage, TestApi
-from rest_api.serializers import PackageCreationSerializer, TestApiSerializer, ListPackageSerializer
-from rest_framework.decorators import api_view
+from rest_api.models import ModuleHistory, ModulePackage, TestApi
+from rest_api.serializers import ModuleHistorySerializer, PackageCreationSerializer, TestApiSerializer, ListPackageSerializer
+from rest_framework.decorators import action, api_view
+
+from django.contrib.auth.models import User
+
+from django.shortcuts import get_object_or_404
+from django.db import IntegrityError
+from datetime import datetime
 
 # API Views Below
+
 
 @api_view(['GET','POST','DELETE'])
 def test_list(request):
@@ -59,27 +66,48 @@ def package_by_name(request,pk):
     #TODO: Retreive the package associated with the name of the request (pk)
 
     if request.method == 'GET':
-        #TODO: Implement version history retreival
-        pass
+
+        change_data = ModuleHistory.objects.filter(User__username=request.user)
+        history_serializer = ModuleHistorySerializer(change_data,many=True)
+        return JsonResponse(history_serializer.data,status=status.HTTP_200_OK)
     if request.method == 'DELETE':
         #TODO: Implement deletion by name
         pass
-    
-# Class-based Views Below:
 
-from django.shortcuts import get_object_or_404
-from django.db import IntegrityError
+class ModuleByNameViewer(ListAPIView):
+    queryset = ModulePackage.objects.all()
+    serializer_class = ModuleHistorySerializer
+    history = ModuleHistory.objects.all()
+
+    def get(self,request,name,*args,**kwargs):
+        modules = ModulePackage.objects.filter(Name__startswith=name)
+        history = ModuleHistory.objects.all()
+        history = history.filter(module__in=modules)
+        history_serializer = ModuleHistorySerializer(history,many=True)
+        return JsonResponse(history_serializer.data,status=status.HTTP_200_OK,safe=False)
+    
+    def delete(self,request,name,*args,**kwargs):
+        tot_delete = ModulePackage.objects.filter(Name__startswith=name).delete()
+        return JsonResponse({'message': '{} Version were deleted successfully!'.format(tot_delete[0])}, status=status.HTTP_200_OK)
+
 class ModulePackageViewer(ListAPIView):
     queryset = ModulePackage.objects.all()
     serializer_class = ListPackageSerializer #subject to change
 
-    def get(self, request, pk, *args, **kwargs):
+    def get(self, request, pk=None, *args, **kwargs):
         package = get_object_or_404(ModulePackage,ID=self.kwargs.get('pk'))
+        history = ModuleHistory.objects.create(user=request.user,date=datetime.now(),module=package,action="DOWNLOAD")
+        history.save()
         serializer = PackageCreationSerializer(package)
         return JsonResponse(serializer.data["metadata"], status=status.HTTP_200_OK)
     
     def post(self, request):
+        metadata = request.data['metadata']
+        if(ModulePackage.objects.filter(ID=metadata['ID']).exists()):
+            request.data['metadata']['ID'] = request.data['metadata']['Name']+'-'+request.data['metadata']['Version']
         package_serializer = PackageCreationSerializer(data=request.data)
+        # Check if ID is already associated with a model:
+
         if package_serializer.is_valid():
             try:
                 package_serializer.save()
