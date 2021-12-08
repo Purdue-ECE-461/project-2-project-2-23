@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^api/test/', views.test_list),
     url(r'^packages/',views.package_list),
     url(r'^package/byName/(?P<name>.+)/$',views.ModuleByNameViewer.as_view()),
+    path(r'package/<str:pk>/rate/',views.package_rate),
     path('package/',views.ModulePackageViewer.as_view(),name='ModulePackageViewer'),
     path('package/<str:pk>/',views.ModulePackageViewer.as_view(),name='ModulePackageViewer'),
     url(r'reset/',views.reset_registry)
