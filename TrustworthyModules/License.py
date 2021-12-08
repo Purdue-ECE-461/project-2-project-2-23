@@ -1,5 +1,5 @@
 import requests
-from Util import get_logger
+from TrustworthyModules.Util import get_logger
 
 logger = get_logger('License')
 logger.info("Logger init in License.py")

@@ -3,7 +3,7 @@ from git import Repo
 from git import rmtree
 import os
 
-from Util import get_logger
+from TrustworthyModules.Util import get_logger
 
 logger = get_logger('Module')
 logger.info("Logger init in Module.py")

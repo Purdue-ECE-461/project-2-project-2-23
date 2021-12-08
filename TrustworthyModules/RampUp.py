@@ -3,8 +3,8 @@ import numpy as np
 from git import Repo
 from git import rmtree
 
-from Util import get_logger
-import GithubHelper
+from TrustworthyModules.Util import get_logger
+import TrustworthyModules.GithubHelper as GithubHelper
 
 MAX_README_LENGTH = 5000
 

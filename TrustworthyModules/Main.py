@@ -2,18 +2,19 @@ import copy
 import datetime
 import sys
 import numpy as np
+import os
 
-import IOUtil
-from GithubHelper import get_repo_path
-from ModuleHelper import get_attributes
-from Util import *
-from Correctness import Correctness
-from License import License
-from BusFactor import BusFactor
-from Popularity import Popularity
-from Responsiveness import Responsiveness
-from RampUp import RampUp
-from Dependency import Dependency
+import TrustworthyModules.IOUtil as IOUtil
+from TrustworthyModules.GithubHelper import get_repo_path
+from TrustworthyModules.ModuleHelper import get_attributes
+from TrustworthyModules.Correctness import Correctness
+from TrustworthyModules.License import License
+from TrustworthyModules.BusFactor import BusFactor
+from TrustworthyModules.Popularity import Popularity
+from TrustworthyModules.Responsiveness import Responsiveness
+from TrustworthyModules.RampUp import RampUp
+from TrustworthyModules.Dependency import Dependency
+from TrustworthyModules.Util import get_logger
 
 logger = get_logger('Main')
 logger.info("Logger init in Main.py")

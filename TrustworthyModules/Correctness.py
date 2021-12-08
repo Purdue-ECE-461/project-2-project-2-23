@@ -1,7 +1,7 @@
 import datetime
-import GithubHelper
+import TrustworthyModules.GithubHelper as GithubHelper
 import numpy
-from Util import get_logger
+from TrustworthyModules.Util import get_logger
 
 logger = get_logger('Correctness')
 logger.info("Logger init in Correctness.py")

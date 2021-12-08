@@ -3,10 +3,11 @@ import datetime
 from pprint import pprint
 import requests
 from github import Github
-from Module import Module
-from Util import *
-from Contributor import *
+from TrustworthyModules.Module import Module
+from TrustworthyModules.Util import get_logger
+from TrustworthyModules.Contributor import Contributor
 from dotenv import load_dotenv
+import os
 
 
 load_dotenv()
@@ -33,31 +34,6 @@ def get_repo_path(url):
     return repo_path, module
 
 
-# Get path to repository from url
-'''def get_repo_path(url):
-    return re.search(r"github\.com\/([\w\/-]*)", url).group(1)
-
-
-# Get path to repository from url
-def get_repo_paths(urls):
-    repo_paths = []
-    module_list = []
-    for url in urls:
-        if "https://github.com" in url:
-            path = get_repo_path(url)
-            repo_paths.append(path)
-            m = Module(path, url, url)
-            module_list.append(m)
-        elif "https://www.npmjs.com" in url:
-            package = url.rsplit('/', 1)[-1]
-            github_url = url_from_npm(package)
-            path = get_repo_path(github_url)
-            repo_paths.append(path)
-            m = Module(path, github_url, url)
-            module_list.append(m)
-        else:
-            logger.error("INVALID URL")
-    return repo_paths, module_list'''
 
 
 # Get Github URL from NPM URL

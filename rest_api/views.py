@@ -7,7 +7,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework import serializers, status
 
-from rest_api.models import ModuleHistory, ModulePackage, TestApi
+from rest_api.models import ModuleHistory, ModulePackage, ModuleRank, TestApi
 from rest_api.serializers import ModuleHistorySerializer, PackageCreationSerializer, TestApiSerializer, ListPackageSerializer
 from rest_framework.decorators import api_view
 
@@ -15,9 +15,9 @@ from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from datetime import datetime
 
+from TrustworthyModules.Main import run_rank_mode
+
 # API Views Below
-
-
 @api_view(['GET','POST','DELETE'])
 def test_list(request):
     if request.method == 'GET':
@@ -65,6 +65,23 @@ def add_history(request,package,action):
         print("FAILED TO ADD HISTORY OBJECT TO DATABASE!")
         return
 
+def create_rank(module_name,scores):
+    try:
+        rank = ModuleRank.objects.create(
+            module_id = module_name
+            net_score = scores['NET_SCORE']
+            ramp_up_score = scores['RAMP_UP_SCORE']
+            correctness_score = scores['CORRECTNESS_SCORE']
+            bus_factor_score = scores['BUS_FACTOR_SCORE']
+            responsiveness_score = scores['RESPONSIVENESS_SCORE']
+            dependency_score = scores['DEPENDENCY_SCORE']
+            license_score = scores['LICENSE_SCORE']
+        )
+        rank.save()
+    except:
+        print("FAILED TO GENERATE RANK MODEL")
+        return
+
 
 @api_view(['GET'])
 def package_list(request):
@@ -99,15 +116,22 @@ class ModulePackageViewer(ListAPIView):
         package = get_object_or_404(ModulePackage,ID=self.kwargs.get('pk'))
         add_history(request,package,"DOWNLOAD")
         serializer = PackageCreationSerializer(package)
-        return JsonResponse(serializer.data["metadata"], status=status.HTTP_200_OK)
+        return JsonResponse(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request):
         # Check if ID is already associated with a model:
         metadata = request.data['metadata']
         if(ModulePackage.objects.filter(ID=metadata['ID']).exists()):
             request.data['metadata']['ID'] = request.data['metadata']['Name']+'-'+request.data['metadata']['Version']
+        
+        #
+        if(request.data['data']['URL'] is not None):
+            # Perform the analysis
+            scores = run_rank_mode(request.data['data']['URL'])
+            print(scores)
+            request.data['data']['Content']="TESTENCODEDSTRINGADDITIONHERE" #TODO: Change this to call the encoded string!
+        
         package_serializer = PackageCreationSerializer(data=request.data)
-
         # Save package data and update package history associated with module
         if package_serializer.is_valid():
             try:

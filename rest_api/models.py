@@ -24,18 +24,12 @@ class ModuleHistory(models.Model):
     module_ID = models.CharField(max_length=255,blank=False,default='')
     action = models.CharField(max_length=20,blank=False,default='')
 
-'''
-{
-    "User": {
-      "name": "Paschal Amusuo",
-      "isAdmin": true
-    },
-    "Date": "2021-11-18T01:11:11Z",
-    "PackageMetadata": {
-      "Name": "Underscore",
-      "Version": "1.0.0",
-      "ID": "underscore"
-    },
-    "Action": "CREATE"
-  }
-  '''
+class ModuleRank(models.Model):
+    module_id = models.CharField(max_length=255,blank=False,primary_key=True)
+    net_score = models.DecimalField(blank=True,max_digits=4,decimal_places=2,default=0.0)
+    ramp_up_score = models.DecimalField(blank=True,max_digits=4,decimal_places=2,default=0.0)
+    correctness_score = models.DecimalField(blank=True,max_digits=4,decimal_places=2,default=0.0)
+    bus_factor_score = models.DecimalField(blank=True,max_digits=4,decimal_places=2,default=0.0)
+    responsiveness_score = models.DecimalField(blank=True,max_digits=4,decimal_places=2,default=0.0)
+    dependency_score = models.DecimalField(blank=True,max_digits=4,decimal_places=2,default=0.0)
+    license_score = models.DecimalField(blank=True,max_digits=4,decimal_places=2,default=0.0)

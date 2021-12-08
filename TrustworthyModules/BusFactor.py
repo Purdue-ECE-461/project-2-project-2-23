@@ -3,10 +3,10 @@ import copy
 import numpy as np
 from scipy.stats import skew
 
-from Metric import Metric
-from GithubHelper import last_year_commit_ratio, prev_years_issues_ratio
+from TrustworthyModules.Metric import Metric
+from TrustworthyModules.GithubHelper import last_year_commit_ratio, prev_years_issues_ratio
 
-from Util import get_logger
+from TrustworthyModules.Util import get_logger
 
 logger = get_logger('BusFactor')
 logger.info("Logger init in BusFactor.py")

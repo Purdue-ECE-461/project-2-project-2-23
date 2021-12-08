@@ -2,19 +2,19 @@ import datetime
 import pytest
 import sys
 
-from Module import Module
-import Main
-import IOUtil
-import GithubHelper
-from Users import get_number_users
-from Contributor import Contributor
-from Correctness import Correctness
-from License import License
-from BusFactor import BusFactor, calculate_std
-from Popularity import Popularity
-from Responsiveness import Responsiveness
-from RampUp import RampUp
-from Dependency import Dependency
+from TrustworthyModules.Module import Module
+import TrustworthyModules.Main as Main
+import TrustworthyModules.IOUtil as IOUtil
+import TrustworthyModules.GithubHelper as GithubHelper
+from TrustworthyModules.Users import get_number_users
+from TrustworthyModules.Contributor import Contributor
+from TrustworthyModules.Correctness import Correctness
+from TrustworthyModules.License import License
+from TrustworthyModules.BusFactor import BusFactor, calculate_std
+from TrustworthyModules.Popularity import Popularity
+from TrustworthyModules.Responsiveness import Responsiveness
+from TrustworthyModules.RampUp import RampUp
+from TrustworthyModules.Dependency import Dependency
 
 
 # end to end test of low performing repo

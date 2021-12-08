@@ -1,10 +1,10 @@
 from os import path
-from Util import *
+import TrustworthyModules.Util as Util
 
 
 # The purpose of this file is to support reading in the URLs and ensure validity
 
-logger = get_logger('IOUtil')
+logger = Util.get_logger('IOUtil')
 logger.info("Logger init in IOUtil.py")
 
 

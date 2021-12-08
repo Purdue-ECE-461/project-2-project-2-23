@@ -1,6 +1,6 @@
 import datetime
 
-from Util import get_logger
+from TrustworthyModules.Util import get_logger
 
 logger = get_logger('Responsiveness')
 logger.info("Logger init in Responsiveness.py")
