@@ -32,6 +32,7 @@ def run_rank_mode(url):
     blockPrint()
     begin_time = datetime.datetime.now()
     logger.info("This will be fun!")
+    ret_scores = {}
 
     logger.info("Running Rank Mode!")
     if url != '':
@@ -64,7 +65,7 @@ def run_rank_mode(url):
                     'LICENSE_SCORE':module.license_class.score}
 
         #logger.info("Output module values with their metrics")
-        IOUtil.output_to_stdout(module)
+        #IOUtil.output_to_stdout(module)
 
         logger.info(f"Time running the code: {datetime.datetime.now() - begin_time}")
         logger.info("This fun is done")

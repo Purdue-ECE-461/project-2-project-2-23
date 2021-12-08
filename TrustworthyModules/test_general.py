@@ -19,15 +19,15 @@ from TrustworthyModules.Dependency import Dependency
 
 # end to end test of low performing repo
 def test_end_to_end_even():
-    module_list = Main.run_rank_mode('test_files/even.txt')
-    if module_list[0] < 0.8: return 1
+    module_dict = Main.run_rank_mode('https://github.com/jonschlinkert/even')
+    if module_dict['NET_SCORE'] < 0.8: return 1
     else: return 0
 
 
 # end to end test of high performing repo
 def test_end_to_end_jquery():
-    module_list = Main.run_rank_mode('test_files/single_test_file.txt')
-    if module_list[0] > 0.4: return 1
+    module_dict = Main.run_rank_mode('https://www.npmjs.com/package/browserify')
+    if module_dict['NET_SCORE'] > 0.4: return 1
     else: return 0
 
 
@@ -132,7 +132,7 @@ def test_npm_to_github():
 
     correct = 0
     for i in range(len(npm_urls)):
-        val = GithubHelper.get_repo_path(GithubHelper.url_from_npm(npm_urls[i]))
+        val = GithubHelper.get_path(GithubHelper.url_from_npm(npm_urls[i]))
         val = 'https://github.com/' + str(val)
         if val == github_urls[i]:
             correct += 1
