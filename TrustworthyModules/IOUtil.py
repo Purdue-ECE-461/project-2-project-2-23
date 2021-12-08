@@ -25,7 +25,7 @@ def read_input_file(filepath):
     return urls
 
 
-def output_to_stdout(module):
+def output_to_stdout(module): #pragma: no cover
     first_line = ['URLS', 'NET_SCORE', 'RAMP_UP_SCORE', 'CORRECTNESS_SCORE', 'BUS_FACTOR_SCORE',
                   'RESPONSIVENESS_SCORE', 'DEPENDENCY_SCORE', 'LICENSE_SCORE']
 
@@ -40,7 +40,7 @@ def output_to_stdout(module):
 
 
 # This function is to sort the modules in module_list for outputting
-def sort_module_list(module_list):
+def sort_module_list(module_list): #pragma: no cover
     net_scores_original = []
     sorted_module_list = []
     # Get all the net scores of each module

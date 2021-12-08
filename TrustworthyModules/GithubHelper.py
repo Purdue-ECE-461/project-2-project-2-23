@@ -21,12 +21,12 @@ def get_repo_path(url):
     repo_path = ''
     module = ''
     if "https://github.com" in url:
-        repo_path = re.search(r"github\.com\/([\w\/-]*)", url).group(1)
+        repo_path = get_path(url)
         module = Module(repo_path, url, url)
     elif "https://www.npmjs.com" in url:
         package = url.rsplit('/', 1)[-1]
         github_url = url_from_npm(package)
-        repo_path = re.search(r"github\.com\/([\w\/-]*)", github_url).group(1)
+        repo_path = get_path(github_url)
         module = Module(repo_path, github_url, url)
     else:
         logger.error("INVALID URL")
@@ -34,12 +34,12 @@ def get_repo_path(url):
 
 
 # Get path to repository from url
-'''def get_repo_path(url):
+def get_path(url):
     return re.search(r"github\.com\/([\w\/-]*)", url).group(1)
 
 
 # Get path to repository from url
-def get_repo_paths(urls):
+'''def get_repo_paths(urls):
     repo_paths = []
     module_list = []
     for url in urls:
