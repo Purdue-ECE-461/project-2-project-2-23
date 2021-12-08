@@ -15,6 +15,7 @@ from TrustworthyModules.Responsiveness import Responsiveness
 from TrustworthyModules.RampUp import RampUp
 from TrustworthyModules.Dependency import Dependency
 from TrustworthyModules.Util import get_logger
+from TrustworthyModules.base64_helper import base64_helper
 
 logger = get_logger('Main')
 logger.info("Logger init in Main.py")
@@ -57,6 +58,7 @@ def run_rank_mode(url):
         logger.info(f"Calculating metrics for {module.name}")
         module.clone_repo()
         module.calculate_net_score()
+        base64_encoded = base64_helper(module.name)
         module.remove_repo()
 
         ret_scores = {'NET_SCORE':module.net_score, 'RAMP_UP_SCORE':module.ramp_up_class.score, \
@@ -71,7 +73,7 @@ def run_rank_mode(url):
         logger.info("This fun is done")
 
         enablePrint()
-        return ret_scores
+        return base64_encoded, ret_scores
     else:
         enablePrint()
         print("Non-Existent URL Given as Input")
