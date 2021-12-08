@@ -68,13 +68,13 @@ def add_history(request,package,action):
 def create_rank(module_name,scores):
     try:
         rank = ModuleRank.objects.create(
-            module_id = module_name
-            net_score = scores['NET_SCORE']
-            ramp_up_score = scores['RAMP_UP_SCORE']
-            correctness_score = scores['CORRECTNESS_SCORE']
-            bus_factor_score = scores['BUS_FACTOR_SCORE']
-            responsiveness_score = scores['RESPONSIVENESS_SCORE']
-            dependency_score = scores['DEPENDENCY_SCORE']
+            module_id = module_name,
+            net_score = scores['NET_SCORE'],
+            ramp_up_score = scores['RAMP_UP_SCORE'],
+            correctness_score = scores['CORRECTNESS_SCORE'],
+            bus_factor_score = scores['BUS_FACTOR_SCORE'],
+            responsiveness_score = scores['RESPONSIVENESS_SCORE'],
+            dependency_score = scores['DEPENDENCY_SCORE'],
             license_score = scores['LICENSE_SCORE']
         )
         rank.save()
