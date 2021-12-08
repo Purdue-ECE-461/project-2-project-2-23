@@ -196,3 +196,13 @@ class ModulePackageTestCase(TestCase):
             {'message': 'successfully deleted entry.'}
         )
    
+ # ============= byName Testing ============ #
+    factory = APIRequestFactory()
+    pkg_endpoint = 'package/byName'
+
+    def test_byname_unauthorized(self):
+
+        # Test Unauthorized Package request
+        request = self.factory.get(self.pkg_endpoint,kwargs={'pk':'TestModule1'})
+        response = (ModulePackageViewer.as_view())(request,pk='TestModule1')
+        self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
