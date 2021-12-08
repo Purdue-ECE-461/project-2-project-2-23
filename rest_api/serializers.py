@@ -31,16 +31,17 @@ class PackageCreationSerializer(WritableNestedModelSerializer):
     class Meta:
         model = ModulePackage
         fields = ('metadata','data')
-class HistoryUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['username','groups']
+class HistoryUserSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    isAdmin = serializers.BooleanField()
 
-class HistoryMetaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ModulePackage
-        fields = ['Name','Version','ID']
-class ModuleHistorySerializer(serializers.ModelSerializer):
+class HistoryMetaSerializer(serializers.Serializer):
+    module_name = serializers.CharField()
+    module_version = serializers.CharField()
+    module_ID = serializers.CharField()
+class ModuleHistorySerializer(WritableNestedModelSerializer):
+    User = HistoryUserSerializer(source='*')
+    PackageMetaData = HistoryMetaSerializer(source='*')
     class Meta:
         model = ModuleHistory
-        fields = ('user','date','module','action')
+        fields = ('User','date','PackageMetaData','action')

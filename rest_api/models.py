@@ -8,7 +8,7 @@ class TestApi(models.Model):
     title = models.CharField(max_length=40,blank=False,default='')
 
 class ModulePackage(models.Model):
-    Name = models.CharField(max_length=300,blank=False,default='')
+    Name = models.CharField(max_length=180,blank=False,default='')
     Version = models.CharField(max_length=20,blank=False,default='0.0.0')
     ID = models.CharField(max_length=255,blank=False,primary_key=True)
     Content = models.CharField(max_length=10285760,blank=True,null=True)
@@ -16,9 +16,12 @@ class ModulePackage(models.Model):
     JSProgram = models.TextField(max_length=1000000,blank=False,default='')
 
 class ModuleHistory(models.Model):
-    user = ForeignKey(User, on_delete=models.CASCADE)
+    username = models.CharField(max_length=40,blank=True,default='')
+    isAdmin = models.BooleanField(blank=True,default=False)
     date = models.DateTimeField(auto_now_add=True,blank=True)
-    module = ForeignKey(ModulePackage, on_delete=models.CASCADE)
+    module_name = models.CharField(max_length=180, blank=False,default='')
+    module_version = models.CharField(max_length=20,blank=False,default='')
+    module_ID = models.CharField(max_length=255,blank=False,default='')
     action = models.CharField(max_length=20,blank=False,default='')
 
 '''
