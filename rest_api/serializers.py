@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_api.models import ModuleHistory, ModulePackage, TestApi
+from rest_api.models import ModuleHistory, ModulePackage, ModuleRank, TestApi
 
 from drf_writable_nested.serializers import WritableNestedModelSerializer
 
@@ -45,3 +45,8 @@ class ModuleHistorySerializer(WritableNestedModelSerializer):
     class Meta:
         model = ModuleHistory
         fields = ('User','date','PackageMetaData','action')
+
+class ModuleRankSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ModuleRank
+        fields = ('net_score','ramp_up_score', 'correctness_score','bus_factor_score','responsiveness_score','dependency_score','license_score')
