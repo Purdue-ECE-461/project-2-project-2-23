@@ -1,5 +1,6 @@
-import GithubHelper
-from Users import get_number_users
+import TrustworthyModules.GithubHelper as GithubHelper
+from TrustworthyModules.Users import get_number_users
+from TrustworthyModules.Module import Module
 
 logger = GithubHelper.get_logger('ModuleHelper')
 logger.info("Logger init in ModuleHelper.py")

@@ -1,20 +1,20 @@
 import coverage
 # Start the code coverage detection
-tot_coverage = coverage.coverage()
-tot_coverage.start()
+tot_coverage = coverage.coverage() #pragma: no cover
+tot_coverage.start() #pragma: no cover
 
-import pytest
-import json
-from test_general import call_tests
-import sys
-import os
+import pytest #pragma: no cover
+import json #pragma: no cover
+from test_general import call_tests #pragma: no cover
+import sys #pragma: no cover
+import os #pragma: no cover
 
 # Disable
-def blockPrint():
+def blockPrint(): #pragma: no cover
     sys.stdout = open(os.devnull, 'w')
 
 # Restore
-def enablePrint():
+def enablePrint(): #pragma: no cover
     sys.stdout = sys.__stdout__
 
 

@@ -7,3 +7,14 @@ requests
 django-environ
 psycopg2-binary==2.9.2
 google-cloud-secret-manager==2.8.0
+pygithub
+pytest
+gitpython
+bs4
+numpy
+scipy
+pytest-cov
+pytest-json-report
+hypothesis
+python-dotenv
+python-utils

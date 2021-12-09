@@ -2,32 +2,32 @@ import datetime
 import pytest
 import sys
 
-from Module import Module
-import Main
-import IOUtil
-import GithubHelper
-from Users import get_number_users
-from Contributor import Contributor
-from Correctness import Correctness
-from License import License
-from BusFactor import BusFactor, calculate_std
-from Popularity import Popularity
-from Responsiveness import Responsiveness
-from RampUp import RampUp
-from Dependency import Dependency
+from TrustworthyModules.Module import Module
+import TrustworthyModules.Main as Main
+import TrustworthyModules.IOUtil as IOUtil
+import TrustworthyModules.GithubHelper as GithubHelper
+from TrustworthyModules.Users import get_number_users
+from TrustworthyModules.Contributor import Contributor
+from TrustworthyModules.Correctness import Correctness
+from TrustworthyModules.License import License
+from TrustworthyModules.BusFactor import BusFactor, calculate_std
+from TrustworthyModules.Popularity import Popularity
+from TrustworthyModules.Responsiveness import Responsiveness
+from TrustworthyModules.RampUp import RampUp
+from TrustworthyModules.Dependency import Dependency
 
 
 # end to end test of low performing repo
 def test_end_to_end_even():
-    module_list = Main.run_rank_mode('test_files/even.txt')
-    if module_list[0] < 0.8: return 1
+    module_dict = Main.run_rank_mode('https://github.com/jonschlinkert/even')
+    if module_dict['NET_SCORE'] < 0.8: return 1
     else: return 0
 
 
 # end to end test of high performing repo
 def test_end_to_end_jquery():
-    module_list = Main.run_rank_mode('test_files/single_test_file.txt')
-    if module_list[0] > 0.4: return 1
+    module_dict = Main.run_rank_mode('https://www.npmjs.com/package/browserify')
+    if module_dict['NET_SCORE'] > 0.4: return 1
     else: return 0
 
 
@@ -132,7 +132,7 @@ def test_npm_to_github():
 
     correct = 0
     for i in range(len(npm_urls)):
-        val = GithubHelper.get_repo_path(GithubHelper.url_from_npm(npm_urls[i]))
+        val = GithubHelper.get_path(GithubHelper.url_from_npm(npm_urls[i]))
         val = 'https://github.com/' + str(val)
         if val == github_urls[i]:
             correct += 1

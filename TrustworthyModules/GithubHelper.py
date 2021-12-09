@@ -3,10 +3,11 @@ import datetime
 from pprint import pprint
 import requests
 from github import Github
-from Module import Module
-from Util import *
-from Contributor import *
+from TrustworthyModules.Module import Module
+from TrustworthyModules.Util import get_logger
+from TrustworthyModules.Contributor import Contributor
 from dotenv import load_dotenv
+import os
 
 
 load_dotenv()
@@ -16,14 +17,30 @@ g = Github(token)
 logger = get_logger('GithubHelper')
 logger.info("Logger init in GithubHelper.py")
 
-
 # Get path to repository from url
 def get_repo_path(url):
+    repo_path = ''
+    module = ''
+    if "https://github.com" in url:
+        repo_path = get_path(url)
+        module = Module(repo_path, url, url)
+    elif "https://www.npmjs.com" in url:
+        package = url.rsplit('/', 1)[-1]
+        github_url = url_from_npm(package)
+        repo_path = get_path(github_url)
+        module = Module(repo_path, github_url, url)
+    else:
+        logger.error("INVALID URL")
+    return repo_path, module
+
+
+# Get path to repository from url
+def get_path(url):
     return re.search(r"github\.com\/([\w\/-]*)", url).group(1)
 
 
 # Get path to repository from url
-def get_repo_paths(urls):
+'''def get_repo_paths(urls):
     repo_paths = []
     module_list = []
     for url in urls:
@@ -41,7 +58,7 @@ def get_repo_paths(urls):
             module_list.append(m)
         else:
             logger.error("INVALID URL")
-    return repo_paths, module_list
+    return repo_paths, module_list'''
 
 
 # Get Github URL from NPM URL

@@ -1,5 +1,5 @@
 import requests
-from Util import get_logger
+from TrustworthyModules.Util import get_logger
 
 logger = get_logger('License')
 logger.info("Logger init in License.py")
@@ -49,21 +49,14 @@ class License:
 
     def get_score(self, spdx_id):
         logger.debug(f"License function: get_score")
-        if spdx_id == -1:
-            return 0
+        if spdx_id == -1: return 0
 
-        if spdx_id == "MIT":
-            return 1
-        if spdx_id == "Unlicense":
-            return 1
-        if spdx_id == "LGPL-2.1-only":
-            return 1
-        if spdx_id == "LGPL-2.1-or-later":
-            return 1
-        if spdx_id == "BSD-3-Clause":
-            return 1
-        if spdx_id == "X11":
-            return 1
+        if spdx_id == "MIT":  return 1
+        if spdx_id == "Unlicense": return 1
+        if spdx_id == "LGPL-2.1-only": return 1
+        if spdx_id == "LGPL-2.1-or-later": return 1
+        if spdx_id == "BSD-3-Clause": return 1
+        if spdx_id == "X11": return 1
 
         return 0
 
@@ -82,15 +75,9 @@ class License:
     def checkReadMe(self):
         decoded_content = str(self.readMe.decoded_content)
         if 'license' in decoded_content.lower():
-            if 'MIT' in decoded_content:
-                self.score = 1
-            elif 'Unlicense' in decoded_content:
-                self.score = 1
-            elif 'LGPL-2.1-only' in decoded_content:
-                self.score = 1
-            elif 'LGPL-2.1-or-later' in decoded_content:
-                self.score = 1
-            elif 'BSD-3-Clause' in decoded_content:
-                self.score = 1
-            elif 'X11' in decoded_content:
-                self.score = 1
+            if 'MIT' in decoded_content: self.score = 1
+            elif 'Unlicense' in decoded_content: self.score = 1
+            elif 'LGPL-2.1-only' in decoded_content: self.score = 1
+            elif 'LGPL-2.1-or-later' in decoded_content: self.score = 1
+            elif 'BSD-3-Clause' in decoded_content: self.score = 1
+            elif 'X11' in decoded_content: self.score = 1

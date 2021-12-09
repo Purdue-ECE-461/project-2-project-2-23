@@ -11,8 +11,8 @@ from rest_framework.test import force_authenticate
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
-from rest_api.views import test_list, ModulePackageViewer
-from rest_api.models import TestApi,ModulePackage
+from rest_api.views import test_list, ModulePackageViewer,ModuleByNameViewer
+from rest_api.models import TestApi,ModulePackage,ModuleHistory
 
 # Test Data
 data = {
@@ -23,7 +23,6 @@ data = {
         },
         "data": {
         	"Content": "lajelmvoiejnoawijnm",
-        	"URL": "https://github.com/test/test",
         	"JSProgram": "process.exit(1)\n"
             }
     }
@@ -62,7 +61,6 @@ class TestApiTestCase(TestCase):
         self.assertIsNotNone(t_obj2)
     
     def test_api_creation(self):
-        '''TEST API RESPONSES'''
         # Case 1: No authorization provided
         request = self.factory.post(self.endpoint, data={'title':'testData'})
         response = test_list(request)
@@ -156,10 +154,6 @@ class ModulePackageTestCase(TestCase):
         force_authenticate(request=request,user=self.user)
         response = (ModulePackageViewer.as_view())(request,pk='TestModule1')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-        self.assertJSONEqual(
-            str(response.content, encoding='utf8'),
-            {"Name": "TestModule1", "Version": "1.1.1", "ID": "TestModule1"}
-        )
 
     # ============= PUT Testing ============ #
     def test_put_unauthorized(self):
@@ -197,3 +191,22 @@ class ModulePackageTestCase(TestCase):
             {'message': 'successfully deleted entry.'}
         )
    
+ # ============= byName Testing ============ #
+    factory = APIRequestFactory()
+    pkg_endpoint = 'package/byName'
+
+    def test_byname_unauthorized(self):
+
+        # Test Unauthorized Package request
+        request = self.factory.get(self.pkg_endpoint,kwargs={'name':'TestModule1'})
+        response = (ModulePackageViewer.as_view())(request,name='TestModule1')
+        self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
+    
+    def test_byname_authorized(self):
+
+        # Test Authorized Package request
+        
+        request = self.factory.get(self.pkg_endpoint,kwargs={'name':'TestModule1'})
+        force_authenticate(request=request,user=self.user)
+        response = (ModuleByNameViewer.as_view())(request,name='TestModule1')
+        self.assertEqual(response.status_code,status.HTTP_200_OK)

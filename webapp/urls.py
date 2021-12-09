@@ -30,7 +30,6 @@ router = routers.DefaultRouter()
 # This code is only for testing and learning, and will be deleted finally.
 
 router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
 
 
 urlpatterns = [
@@ -38,5 +37,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('authentication/',TokenObtainPairView.as_view(),name="token_obtain_pair")
+    path('authentication/',views.CustomTokenObtainView.as_view(),name="token_obtain_pair")
 ]

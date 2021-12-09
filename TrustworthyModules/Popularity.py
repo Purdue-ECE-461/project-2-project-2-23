@@ -1,6 +1,6 @@
-from Util import get_logger
-import GithubHelper
-import Users
+from TrustworthyModules.Util import get_logger
+import TrustworthyModules.GithubHelper as GithubHelper
+import TrustworthyModules.Users as Users
 
 logger = get_logger('Popularity')
 logger.info("Logger init in Popularity.py")
