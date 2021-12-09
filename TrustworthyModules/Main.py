@@ -58,8 +58,8 @@ def run_rank_mode(url):
         logger.info(f"Calculating metrics for {module.name}")
         module.clone_repo()
         module.calculate_net_score()
-        base64_encoded = base64_helper(module.name)
-        module.remove_repo()
+        base64_encoded = base64_helper('tmp/' + module.name)
+        #module.remove_repo()
 
         ret_scores = {'NET_SCORE':module.net_score, 'RAMP_UP_SCORE':module.ramp_up_class.score, \
             'CORRECTNESS_SCORE':module.correct_class.score, 'BUS_FACTOR_SCORE':module.bus_factor_class.score, \

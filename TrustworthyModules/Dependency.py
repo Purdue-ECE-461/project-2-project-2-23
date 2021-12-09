@@ -14,7 +14,7 @@ class Dependency:
         package_json = ''
 
         found_json = False
-        for (subdir, dir, check_json) in os.walk(os.path.normpath(self.module_name)):
+        for (subdir, dir, check_json) in os.walk(os.path.normpath('tmp/' + self.module_name)):
             for check_per in check_json:
                 if 'package.json' in check_per:
                     found_json = True

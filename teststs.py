@@ -4,4 +4,5 @@ from TrustworthyModules.RunTests import runtests
 
 
 if __name__ == '__main__':
-    runtests()
+    #runtests()
+    _,_ = run_rank_mode(sys.argv[1])

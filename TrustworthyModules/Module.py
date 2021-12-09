@@ -34,12 +34,12 @@ class Module:
 
     def clone_repo(self):
         # Check if the repo already is cloned, if not then clone
-        repo = Repo.clone_from(self.url, self.name)  # could maybe use giturl but we dont have that yet
+        repo = Repo.clone_from(self.url, 'tmp/' + self.name)  # could maybe use giturl but we dont have that yet
         
     def remove_repo(self):
         # Remove cloned repo
         cwd = os.getcwd()
-        directory_folder_empty = os.path.join(cwd, self.name.split("/")[0])
+        directory_folder_empty = os.path.join(cwd, 'tmp/' + self.name.split("/")[0])
         print(directory_folder_empty)
         rmtree(directory_folder_empty)
 
