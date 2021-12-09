@@ -23,7 +23,6 @@ data = {
         },
         "data": {
         	"Content": "lajelmvoiejnoawijnm",
-        	"URL": "https://github.com/test/test",
         	"JSProgram": "process.exit(1)\n"
             }
     }
@@ -155,10 +154,6 @@ class ModulePackageTestCase(TestCase):
         force_authenticate(request=request,user=self.user)
         response = (ModulePackageViewer.as_view())(request,pk='TestModule1')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-        self.assertJSONEqual(
-            str(response.content, encoding='utf8'),
-            {"Name": "TestModule1", "Version": "1.1.1", "ID": "TestModule1"}
-        )
 
     # ============= PUT Testing ============ #
     def test_put_unauthorized(self):

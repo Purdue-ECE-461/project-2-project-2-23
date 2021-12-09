@@ -14,8 +14,11 @@ from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from datetime import datetime
+from rest_framework.viewsets import ModelViewSet
 
 from TrustworthyModules.Main import run_rank_mode
+
+from rest_framework.pagination import LimitOffsetPagination
 
 BAD_REQUEST = 'Error, could not find page or user error of api functionality.'
 
@@ -106,6 +109,16 @@ def package_list(request):
     except Exception:
         return HttpResponse(BAD_REQUEST,status=status.HTTP_404_NOT_FOUND)
 
+class ModuleListViewer(ModelViewSet):
+    queryset = ModulePackage.objects.all()
+    serializer_class = ListPackageSerializer
+    pagination_class = LimitOffsetPagination
+
+    def get(self):
+        return self.queryset()
+
+
+
 class ModuleByNameViewer(ListAPIView):
     queryset = ModulePackage.objects.all()
     serializer_class = ModuleHistorySerializer
@@ -152,9 +165,9 @@ class ModulePackageViewer(ListAPIView):
             #
             if('URL' in request.data['data'] and 'Name' in request.data['metadata']):
                 # Perform the analysis
-                scores = run_rank_mode(request.data['data']['URL'])
+                (base64_encode, scores) = run_rank_mode(request.data['data']['URL'])
                 rank = create_rank(request.data['metadata']['ID'],scores)
-                request.data['data']['Content']="TESTENCODEDSTRINGADDITIONHERE" #TODO: Change this to call the encoded string!
+                request.data['data']['Content']=base64_encode
 
             package_serializer = PackageCreationSerializer(data=request.data)
             # Save package data and update package history associated with module
