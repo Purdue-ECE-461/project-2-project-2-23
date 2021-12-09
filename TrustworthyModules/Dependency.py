@@ -1,4 +1,4 @@
-from os import walk
+import os
 import re
 
 class Dependency:
@@ -14,11 +14,11 @@ class Dependency:
         package_json = ''
 
         found_json = False
-        for (dirs, dir, check_json) in walk((self.module_name.split('/'))[0]):
+        for (subdir, dir, check_json) in os.walk(os.path.normpath(self.module_name)):
             for check_per in check_json:
                 if 'package.json' in check_per:
                     found_json = True
-                    package_json = (dirs + '/' + check_per)
+                    package_json = (subdir + '/' + check_per)
                     break;
             if found_json: break;
 
