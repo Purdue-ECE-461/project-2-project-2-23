@@ -19,7 +19,7 @@ def enablePrint(): #pragma: no cover
 
 
 def runtests(): #pragma: no cover
-    #blockPrint()
+    blockPrint()
     total_passed, total_tests = call_tests()
     
     '''# read in json file 1 test_report.json
