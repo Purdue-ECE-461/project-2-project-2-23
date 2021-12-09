@@ -1,0 +1,225 @@
+---
+openapi: 3.0.2
+info:
+  title: Purdue-ECE-461-project-2-team 23
+  version: 1.0.0
+  description: "API for project 2: team 23"
+servers:
+- url: https://ece461-project-2-23.ue.r.appspot.com/
+  description: ""
+paths:
+  /package:
+    summary: Create a version of a package
+    description: "The \"ID\" field in the request body allows the user to use their\
+      \ own ID scheme. If this ID is already in use, the system chooses a new ID and\
+      \ indicates this in the response body."
+    post:
+      requestBody:
+        content:
+          application/json: {}
+        required: true
+      responses:
+        "201":
+          description: Success. Check the ID in the returned metadata for the official
+            ID.
+        "403":
+          description: Package exists already.
+        "400":
+          description: Malformed request.
+      operationId: PackageCreate
+    parameters:
+    - name: X-Authentication
+      description: "User authentication token, provided by the /authenticate endpoint"
+      schema:
+        type: string
+      in: header
+      required: true
+  /reset:
+    summary: Reset registry
+    delete:
+      responses:
+        "200":
+          description: Registry is reset.
+        "401":
+          description: You do not have permission to reset the registry.
+      operationId: RegistryReset
+    parameters:
+    - name: X-Authorization
+      description: "User authentication token, provided by the /authenticate endpoint"
+      schema:
+        type: string
+      in: header
+      required: true
+  /package/{id}:
+    summary: Interact with the package with this ID
+    get:
+      parameters:
+      - name: id
+        description: ID of package to fetch
+        schema:
+          type: string
+        in: path
+        required: true
+      responses:
+        "200":
+          description: OK response
+      operationId: PackageRetrieve
+      description: Return this package.
+    put:
+      requestBody:
+        content:
+          application/json: {}
+        required: true
+      responses:
+        "200":
+          description: Success.
+        "400":
+          description: Malformed request (e.g. no such package).
+      operationId: PackageUpdate
+      summary: Update this version of the package.
+      description: |-
+        The name, version, and ID must match.
+
+        The package contents (from PackageData) will replace the previous contents.
+    delete:
+      responses:
+        "200":
+          description: Package is deleted.
+        "400":
+          description: No such package.
+      operationId: PackageDelete
+      summary: Delete this version of the package.
+    parameters:
+    - name: id
+      description: Package ID
+      schema:
+        type: string
+      in: path
+      required: true
+    - name: X-Authorization
+      description: "User authentication token, provided by the /authenticate endpoint"
+      schema:
+        type: string
+      in: header
+      required: true
+  /authenticate:
+    summary: Authenticate this user -- get an access token.
+    description: "If your system supports the authentication scheme described in the\
+      \ spec, then:\r\n\r\n      1. The obtained token should be provided to the other\
+      \ endpoints via the \"X-Authorization\" header.\r\n      2. The \"Authorization\"\
+      \ header is *required* in your system.\r\n\r\nOtherwise, this endpoint should\
+      \ return HTTP 501 \"Not implemented\", and the \"X-Authorization\" header should\
+      \ be unused for the other endpoints."
+    put:
+      requestBody:
+        content:
+          application/json: {}
+        required: true
+      responses:
+        "200":
+          description: Success.
+        "401":
+          description: Authentication failed (e.g. no such user or invalid password)
+        "501":
+          description: This system does not support authentication.
+      operationId: CreateAuthToken
+      summary: Token is returned
+    parameters:
+    - name: Username-Password
+      description: " '{\"username\":\"<enterUsername>\",\"password\":\"<enterPassword>\"\
+        }'"
+      schema:
+        type: string
+      in: header
+      required: true
+  /package/byName/{name}:
+    summary: Interact with the package with this name
+    description: Return the history of this package (all versions).
+    get:
+      responses:
+        "200":
+          description: Package history success.
+        "400":
+          description: No such package.
+      operationId: PackageByNameGet
+      summary: Delete all versions of this package.
+    delete:
+      responses:
+        "200":
+          description: Package is deleted.
+        "400":
+          description: No such package.
+      operationId: PackageByNameDelete
+      summary: Delete all versions of this package.
+    parameters:
+    - name: name
+      description: (Required) name of package to fetch
+      schema:
+        type: string
+      in: path
+      required: true
+    - name: X-Authorization
+      description: "User authentication token, provided by the /authenticate endpoint"
+      schema:
+        type: string
+      in: header
+      required: true
+  /packages:
+    summary: Query the registry.
+    description: "Search for packages satisfying the indicated query.\r\n\r\nIf you\
+      \ want to enumerate all packages, provide an array with a single PackageQuery\
+      \ whose name is \"*\".\r\n\r\nThe response is paginated; the response header\
+      \ includes the offset to use in the next query."
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items: {}
+        required: true
+      parameters:
+      - name: offset
+        description: "Provide this for pagination. If not provided, returns the first\
+          \ page of results."
+        schema: {}
+        in: query
+        required: false
+      responses:
+        "200":
+          description: Success! List of packages returned.
+      operationId: PackagesList
+      summary: Get packages
+      description: Get any packages fitting the query.
+    parameters:
+    - name: X-Authorization
+      description: "User authentication token, provided by the /authenticate endpoint"
+      schema:
+        type: string
+      in: header
+      required: true
+  /package/{id}/rate:
+    summary: Get the rating for this package.
+    get:
+      responses:
+        "200":
+          content:
+            application/json: {}
+          description: Rating. Only use this if each metric was computed successfully.
+        "400":
+          description: No such package.
+        "500":
+          description: The package rating system choked on at least one of the metrics.
+      operationId: PackageRate
+    parameters:
+    - name: id
+      schema:
+        type: string
+      in: path
+      required: true
+    - name: X-Authorization
+      description: ""
+      schema:
+        type: string
+      in: header
+      required: true
