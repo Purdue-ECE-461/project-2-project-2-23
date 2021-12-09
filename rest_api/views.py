@@ -145,14 +145,11 @@ class ModulePackageViewer(ListAPIView):
     serializer_class = ListPackageSerializer #subject to change
 
     def get(self, request, pk=None, *args, **kwargs):
-        try:
-            # Fetch relevant package, update package history
-            package = get_object_or_404(ModulePackage,ID=self.kwargs.get('pk'))
-            add_history(request,package,"DOWNLOAD")
-            serializer = PackageCreationSerializer(package)
-            return JsonResponse(serializer.data, status=status.HTTP_200_OK)
-        except Exception:
-            return HttpResponse(BAD_REQUEST,status=status.HTTP_404_NOT_FOUND)
+        # Fetch relevant package, update package history
+        package = get_object_or_404(ModulePackage,ID=self.kwargs.get('pk'))
+        add_history(request,package,"DOWNLOAD")
+        serializer = PackageCreationSerializer(package)
+        return JsonResponse(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request):
         try:

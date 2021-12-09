@@ -5,7 +5,7 @@ tot_coverage.start() #pragma: no cover
 
 import pytest #pragma: no cover
 import json #pragma: no cover
-from test_general import call_tests #pragma: no cover
+from TrustworthyModules.test_general import call_tests #pragma: no cover
 import sys #pragma: no cover
 import os #pragma: no cover
 
@@ -18,8 +18,8 @@ def enablePrint(): #pragma: no cover
     sys.stdout = sys.__stdout__
 
 
-if __name__ == "__main__":
-    blockPrint()
+def runtests(): #pragma: no cover
+    #blockPrint()
     total_passed, total_tests = call_tests()
     
     '''# read in json file 1 test_report.json

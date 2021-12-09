@@ -9,7 +9,7 @@ logger.info("Logger init in IOUtil.py")
 
 
 # verify that the path for the text file is correct
-def verify_path(filepath):
+def verify_path(filepath): #pragma: no cover
     if path.exists(filepath):
         logger.info("path found")
         return filepath
@@ -19,7 +19,7 @@ def verify_path(filepath):
 
 
 # read in text file to list
-def read_input_file(filepath):
+def read_input_file(filepath): #pragma: no cover
     with open(filepath) as f:
         urls = f.read().splitlines() 
     return urls

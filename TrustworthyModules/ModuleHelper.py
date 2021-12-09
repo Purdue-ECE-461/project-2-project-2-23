@@ -2,8 +2,8 @@ import TrustworthyModules.GithubHelper as GithubHelper
 from TrustworthyModules.Users import get_number_users
 from TrustworthyModules.Module import Module
 
-logger = GithubHelper.get_logger('ModuleHelper')
-logger.info("Logger init in ModuleHelper.py")
+logger = GithubHelper.get_logger('ModuleHelper') #pragma: no cover
+logger.info("Logger init in ModuleHelper.py") #pragma: no cover
 
 
 def get_attributes(module):
