@@ -1,4 +1,5 @@
 from django.core.checks.messages import Error
+from django.db.models.expressions import OrderBy
 import requests
 from django.shortcuts import render
 
@@ -49,11 +50,11 @@ def test_list(request):
 
 @api_view(['DELETE'])
 def reset_registry(request):
-    #ModuleHistory.objects.all().delete()
-    #ModulePackage.objects.all().delete()
-    #TestApi.objects.all().delete()
+    ModuleHistory.objects.all().delete()
+    ModulePackage.objects.all().delete()
+    TestApi.objects.all().delete()
     ModuleRank.objects.all().delete()
-    return JsonResponse({'message': 'Registry Reset!'}, status=status.HTTP_204_NO_CONTENT)
+    return HttpResponse(status=status.HTTP_200_OK)
     
 def add_history(request,package,action):
     try:
@@ -109,18 +110,25 @@ def package_list(request):
     except Exception:
         return HttpResponse(BAD_REQUEST,status=status.HTTP_404_NOT_FOUND)
 
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+class CustomPagination(LimitOffsetPagination):
+    default_limit = 10
+    max_limit = 100
+
+    def get_paginated_response(self, data):
+        return Response(data)
+
 class ModuleListViewer(ModelViewSet):
     queryset = ModulePackage.objects.all()
     serializer_class = ListPackageSerializer
-    pagination_class = LimitOffsetPagination
+    pagination_class = CustomPagination
 
     def get(self):
         return self.queryset()
 
-
-
 class ModuleByNameViewer(ListAPIView):
-    queryset = ModulePackage.objects.all()
+    queryset = ModulePackage.objects.all().order_by('Name')
     serializer_class = ModuleHistorySerializer
     history = ModuleHistory.objects.all()
 
