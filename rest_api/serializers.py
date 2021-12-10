@@ -12,6 +12,7 @@ class TestApiSerializer(serializers.ModelSerializer):
 class ListPackageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ModulePackage
+        ordering = ['-id']
         fields = ('Name', 'Version', 'ID')
 
 class PackageMetaSerializer(serializers.Serializer):

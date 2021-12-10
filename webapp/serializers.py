@@ -3,6 +3,7 @@
 # This code is only for testing and learning, and will be deleted finally.
 
 from django.contrib.auth.models import User
+from django.db.models.fields import CharField
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -18,5 +19,6 @@ class AuthenticationSerializer(TokenObtainPairSerializer):
         fields = ['username','password']
 
     def validate(self,attrs):
+        print(attrs)
         data = super(AuthenticationSerializer,self).validate(attrs)
         return 'bearer '+data['access']
