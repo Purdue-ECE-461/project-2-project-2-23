@@ -80,8 +80,11 @@ class RampUp:
         return score
 
     def module_clone_readme_analyzer(self):
-        cwd = os.getcwd()
-        directory = os.path.join(cwd, 'tmp/' + self.module_name)
+        try:
+            cwd = os.getcwd()
+            directory = os.path.join(cwd, 'tmp/' + self.module_name)
+        except: return 0
+        
         is_example_exists = 0
         is_code_in_readme_exists = 0
         for filename in os.listdir(directory):
