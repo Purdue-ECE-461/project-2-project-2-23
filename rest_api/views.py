@@ -1,12 +1,10 @@
-from django.core.checks.messages import Error
-from django.db.models.expressions import OrderBy
-import requests
-from django.shortcuts import render
-
-from django.http.response import Http404, HttpResponse, JsonResponse
+from django.http.response import HttpResponse, HttpResponseBadRequest, JsonResponse
 from rest_framework.generics import ListAPIView
 from rest_framework.parsers import JSONParser
-from rest_framework import serializers, status
+from rest_framework import status
+
+from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.response import Response
 
 from rest_api.models import ModuleHistory, ModulePackage, ModuleRank, TestApi
 from rest_api.serializers import ModuleHistorySerializer, ModuleRankSerializer, PackageCreationSerializer, TestApiSerializer, ListPackageSerializer
@@ -23,38 +21,14 @@ from rest_framework.pagination import LimitOffsetPagination
 
 BAD_REQUEST = 'Error, could not find page or user error of api functionality.'
 
-# API Views Below
-@api_view(['GET','POST','DELETE'])
-def test_list(request):
-    if request.method == 'GET':
-        tests = TestApi.objects.all()
+# Helper functions + classes
+class CustomPagination(LimitOffsetPagination):
+    default_limit = 10
+    max_limit = 100
 
-        title = request.query_params.get('title', None)
-        if title is not None:
-            tests = tests.filter(title__icontains=title)
+    def get_paginated_response(self, data):
+        return Response(data)
 
-        test_serializer = TestApiSerializer(tests,many=True)
-        return JsonResponse(test_serializer.data,status=status.HTTP_200_OK,safe=False)
-    
-    elif request.method == 'POST':
-        test_data = JSONParser().parse(request)
-        test_serializer = TestApiSerializer(data=test_data)
-        if test_serializer.is_valid():
-            test_serializer.save()
-            return JsonResponse(test_serializer.data, status=status.HTTP_201_CREATED)
-        return JsonResponse(test_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    elif request.method == 'DELETE':
-        tot_delete = TestApi.objects.all().delete()
-        return JsonResponse({'message': '{} Tutorials were deleted successfully!'.format(tot_delete[0])}, status=status.HTTP_204_NO_CONTENT, safe=False)
-
-@api_view(['DELETE'])
-def reset_registry(request):
-    ModuleHistory.objects.all().delete()
-    ModulePackage.objects.all().delete()
-    TestApi.objects.all().delete()
-    ModuleRank.objects.all().delete()
-    return HttpResponse(status=status.HTTP_200_OK)
     
 def add_history(request,package,action):
     try:
@@ -71,7 +45,7 @@ def add_history(request,package,action):
     except Exception:
         print("FAILED TO ADD HISTORY OBJECT TO DATABASE!")
         return
-
+    
 def create_rank(module_name,scores):
     try:
         rank = ModuleRank.objects.create(
@@ -90,13 +64,33 @@ def create_rank(module_name,scores):
         print(e)
         return None
 
+
+# API Views
+
+@api_view(['DELETE'])
+def reset_registry(request):
+    ModuleHistory.objects.all().delete()
+    ModulePackage.objects.all().delete()
+    TestApi.objects.all().delete()
+    ModuleRank.objects.all().delete()
+    return HttpResponse(status=status.HTTP_200_OK)
+
+
 @api_view(['GET'])
 def package_rate(request,pk):
     try:
         package = ModulePackage.objects.get(pk=pk)
-        module_rate = ModuleRank.objects.get(module_id=package.ID)
-        rate_serializer = ModuleRankSerializer(module_rate)
-        return JsonResponse(rate_serializer.data,status=status.HTTP_200_OK)
+        add_history(request,package,"RATE")
+        if package.URL == '':
+            return HttpResponseBadRequest("Cannot call rate on packages with no linked repository!")
+        else:
+            try:
+                module_rate = ModuleRank.objects.get(module_id__icontains=package.ID)
+            except ModuleRank.DoesNotExist:
+                 return HttpResponse("Could not rate the package (Github Token Usage or Timeout Exceeded)",
+                 status=status.HTTP_400_BAD_REQUEST)
+            rate_serializer = ModuleRankSerializer(module_rate)
+            return JsonResponse(rate_serializer.data,status=status.HTTP_200_OK)
     except Exception:
         return HttpResponse(BAD_REQUEST,status=status.HTTP_404_NOT_FOUND)
 
@@ -110,14 +104,6 @@ def package_list(request):
     except Exception:
         return HttpResponse(BAD_REQUEST,status=status.HTTP_404_NOT_FOUND)
 
-from rest_framework.pagination import PageNumberPagination
-from rest_framework.response import Response
-class CustomPagination(LimitOffsetPagination):
-    default_limit = 10
-    max_limit = 100
-
-    def get_paginated_response(self, data):
-        return Response(data)
 
 class ModuleListViewer(ModelViewSet):
     queryset = ModulePackage.objects.all()
@@ -126,6 +112,7 @@ class ModuleListViewer(ModelViewSet):
 
     def get(self):
         return self.queryset()
+
 
 class ModuleByNameViewer(ListAPIView):
     queryset = ModulePackage.objects.all().order_by('Name')
@@ -148,6 +135,7 @@ class ModuleByNameViewer(ListAPIView):
         except Exception:
             return HttpResponse(BAD_REQUEST,status=status.HTTP_404_NOT_FOUND)
 
+
 class ModulePackageViewer(ListAPIView):
     queryset = ModulePackage.objects.all()
     serializer_class = ListPackageSerializer #subject to change
@@ -168,7 +156,7 @@ class ModulePackageViewer(ListAPIView):
                 request.data['metadata']['ID'] = request.data['metadata']['Name']+'-'+request.data['metadata']['Version']
 
             #
-            if('URL' in request.data['data'] and 'Name' in request.data['metadata']):
+            if('URL' in request.data['data'] and 'ID' in request.data['metadata']):
                 # Perform the analysis
                 (base64_encode, scores) = run_rank_mode(request.data['data']['URL'])
                 rank = create_rank(request.data['metadata']['ID'],scores)
