@@ -1,7 +1,8 @@
-import numpy as np
-from git import Repo
-from git import rmtree
-import os
+import numpy as np # pragma: no cover
+from git import Repo # pragma: no cover
+from git import rmtree # pragma: no cover
+import os # pragma: no cover
+import tempfile # pragma: no cover
 
 from TrustworthyModules.Util import get_logger
 
@@ -34,13 +35,25 @@ class Module:
 
     def clone_repo(self):
         # Check if the repo already is cloned, if not then clone
-        repo = Repo.clone_from(self.url, 'tmp/' + self.name)  # could maybe use giturl but we dont have that yet
+        #repo = Repo.clone_from(self.url, os.path.abspath('C:\\') + 'tmp/' + self.name)  # could maybe use giturl but we dont have that yet
+
+        self.repo = tempfile.TemporaryDirectory()
+        self.repo.name = 'tmp/' + self.name #TODO: Check for errors in the creation of the temporary directory
+
+        # TODO: Handle error where working exists already
+        if os.path.isdir('tmp'):
+            try: self.remove_repo()
+            except OSError: 
+                return 23
+
+        # TODO: Get repo url from June's function, for now just going to clone directly
+        Repo.clone_from(self.url, self.repo.name)
+
         
     def remove_repo(self):
         # Remove cloned repo
         cwd = os.getcwd()
         directory_folder_empty = os.path.join(cwd, 'tmp/')
-        print(directory_folder_empty)
         rmtree(directory_folder_empty)
 
     def __str__(self):
