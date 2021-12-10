@@ -39,7 +39,7 @@ class Module:
     def remove_repo(self):
         # Remove cloned repo
         cwd = os.getcwd()
-        directory_folder_empty = os.path.join(cwd, 'tmp/' + self.name.split("/")[0])
+        directory_folder_empty = os.path.join(cwd, 'tmp/')
         print(directory_folder_empty)
         rmtree(directory_folder_empty)
 
