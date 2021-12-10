@@ -57,7 +57,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ece461-project-2-23.ue.r.appspot.com','127.0.0.1']
+ALLOWED_HOSTS = ['ece461-project-2-23.ue.r.appspot.com','127.0.0.1',os.environ.get("CLOUD_RUN_HOST")]
 
 
 # Application definition
