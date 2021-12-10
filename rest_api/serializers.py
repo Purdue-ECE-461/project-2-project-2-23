@@ -12,6 +12,7 @@ class TestApiSerializer(serializers.ModelSerializer):
 class ListPackageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ModulePackage
+        ordering = ['-id']
         fields = ('Name', 'Version', 'ID')
 
 class PackageMetaSerializer(serializers.Serializer):
@@ -31,22 +32,39 @@ class PackageCreationSerializer(WritableNestedModelSerializer):
     class Meta:
         model = ModulePackage
         fields = ('metadata','data')
+
 class HistoryUserSerializer(serializers.Serializer):
-    username = serializers.CharField()
+    name = serializers.CharField(source='username')
     isAdmin = serializers.BooleanField()
 
 class HistoryMetaSerializer(serializers.Serializer):
-    module_name = serializers.CharField()
-    module_version = serializers.CharField()
-    module_ID = serializers.CharField()
+    Name = serializers.CharField(source='module_name')
+    Version = serializers.CharField(source='module_version')
+    ID = serializers.CharField(source='module_ID')
+
 class ModuleHistorySerializer(WritableNestedModelSerializer):
     User = HistoryUserSerializer(source='*')
-    PackageMetaData = HistoryMetaSerializer(source='*')
+    PackageMetadata = HistoryMetaSerializer(source='*')
+    Date = serializers.CharField(source='date')
+    Action = serializers.CharField(source='action')
     class Meta:
         model = ModuleHistory
-        fields = ('User','date','PackageMetaData','action')
+        fields = ('User','Date','PackageMetadata','Action')
 
 class ModuleRankSerializer(serializers.ModelSerializer):
+    RampUp = serializers.DecimalField(max_digits=10,decimal_places=2,source='ramp_up_score')
+    Correctness = serializers.DecimalField(max_digits=10,decimal_places=2,source='correctness_score')
+    BusFactor = serializers.DecimalField(max_digits=10,decimal_places=2,source='bus_factor_score')
+    ResponsiveMaintainer = serializers.DecimalField(max_digits=10,decimal_places=2,source='responsiveness_score')
+    LicenseScore = serializers.DecimalField(max_digits=10,decimal_places=2,source='license_score')
+    GoodPinningPractice = serializers.DecimalField(max_digits=10,decimal_places=2,source='dependency_score')
     class Meta:
         model = ModuleRank
-        fields = ('net_score','ramp_up_score', 'correctness_score','bus_factor_score','responsiveness_score','dependency_score','license_score')
+        fields = (
+            'RampUp',
+            'Correctness',
+            'BusFactor',
+            'ResponsiveMaintainer',
+            'LicenseScore',
+            'GoodPinningPractice'
+        )
