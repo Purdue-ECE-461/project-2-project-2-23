@@ -3,6 +3,7 @@ import datetime
 import sys
 import numpy as np
 import os
+from queue import Queue
 
 import TrustworthyModules.IOUtil as IOUtil
 from TrustworthyModules.GithubHelper import get_repo_path
@@ -29,7 +30,7 @@ def enablePrint():
     sys.stdout = sys.__stdout__
 
 
-def run_rank_mode(url):
+def run_rank_mode(url, q):
     logger.info("-------------Running Trustworthy Modules-------------")
     logger.info("-----------------------------------------------------")
 
@@ -84,7 +85,7 @@ def run_rank_mode(url):
 
     if retvals[0] == '' | retvals[1] == []:
         exit(1)
-    else: return retvals
+    else: q.put(retvals) # originally just returned retvals
 
 
 if __name__ == '__main__':

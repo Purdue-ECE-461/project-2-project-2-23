@@ -1,3 +1,4 @@
+import queue
 from django.http.response import HttpResponse, HttpResponseBadRequest, JsonResponse
 from rest_framework.generics import ListAPIView
 from rest_framework.parsers import JSONParser
@@ -18,6 +19,8 @@ from rest_framework.viewsets import ModelViewSet
 from TrustworthyModules.Main import run_rank_mode
 
 from rest_framework.pagination import LimitOffsetPagination
+import threading
+from queue import Queue
 
 BAD_REQUEST = 'Error, could not find page or user error of api functionality.'
 
@@ -158,7 +161,13 @@ class ModulePackageViewer(ListAPIView):
             #
             if('URL' in request.data['data'] and 'ID' in request.data['metadata']):
                 # Perform the analysis
-                (base64_encode, scores) = run_rank_mode(request.data['data']['URL'])
+                q = Queue(1)
+                try: # diana added from here thru except :)
+                    rank_thread = threading.Thread(target=run_rank_mode, args=(request.data['data']['URL'], q))
+                    rank_thread.start()
+                    (base64_encode, scores) = q.get()
+                except: (base64_encode, scores) = run_rank_mode(request.data['data']['URL']) # this was original line
+
                 rank = create_rank(request.data['metadata']['ID'],scores)
                 request.data['data']['Content']=base64_encode
 
@@ -169,6 +178,9 @@ class ModulePackageViewer(ListAPIView):
                     package_serializer.save()
                     if rank is not None:
                         rank.save()
+
+                    rank_thread.join() # diana added :)
+
                     package = ModulePackage.objects.get(pk=request.data['metadata']['ID'])
                     add_history(request,package,"CREATED")
                     return JsonResponse(package_serializer.data["metadata"], status=status.HTTP_201_CREATED)
