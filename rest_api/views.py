@@ -165,6 +165,7 @@ class ModulePackageViewer(ListAPIView):
                 try: # diana added from here thru except :)
                     rank_thread = threading.Thread(target=run_rank_mode, args=(request.data['data']['URL'], q))
                     rank_thread.start()
+                    rank_thread.join() # diana added :)
                     (base64_encode, scores) = q.get()
                 except: (base64_encode, scores) = run_rank_mode(request.data['data']['URL']) # this was original line
 
@@ -179,7 +180,7 @@ class ModulePackageViewer(ListAPIView):
                     if rank is not None:
                         rank.save()
 
-                    rank_thread.join() # diana added :)
+                    
 
                     package = ModulePackage.objects.get(pk=request.data['metadata']['ID'])
                     add_history(request,package,"CREATED")
