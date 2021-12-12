@@ -11,7 +11,7 @@ from rest_framework.test import force_authenticate
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
-from rest_api.views import ModulePackageViewer,ModuleByNameViewer
+from rest_api.views import ModulePackageViewer,ModuleByNameViewer,package_rate
 from rest_api.models import ModulePackage,ModuleHistory,ModuleRank
 
 # Test Data
@@ -154,7 +154,7 @@ class ModulePackageTestCase(TestCase):
         
         # Test Unauthorized Package request
         request = self.factory.get(self.pkg_endpoint,kwargs={'ID':'smallest'})
-        response = (ModulePackageViewer.as_view())(request,ID='TestModule1')
+        response = package_rate(request,pk='TestModule1')
         self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
 
 
@@ -163,5 +163,5 @@ class ModulePackageTestCase(TestCase):
         # Test authorized Package request
         request = self.factory.get(self.pkg_endpoint,kwargs={'ID':'smallest'})
         force_authenticate(request=request,user=self.user)
-        response = (ModulePackageViewer.as_view())(request,ID='smallest')
+        response = package_rate(request,pk='smallest')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
