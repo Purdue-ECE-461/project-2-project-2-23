@@ -11,8 +11,8 @@ from rest_framework.test import force_authenticate
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
-from rest_api.views import ModulePackageViewer,ModuleByNameViewer
-from rest_api.models import ModulePackage,ModuleHistory
+from rest_api.views import ModulePackageViewer,ModuleByNameViewer,package_rate
+from rest_api.models import ModulePackage,ModuleHistory,ModuleRank
 
 # Test Data
 data = {
@@ -128,7 +128,7 @@ class ModulePackageTestCase(TestCase):
    
  # ============= byName Testing ============ #
     factory = APIRequestFactory()
-    pkg_endpoint = 'package/byName'
+    pkg_endpoint = 'package/byName/'
 
     def test_byname_unauthorized(self):
 
@@ -145,3 +145,23 @@ class ModulePackageTestCase(TestCase):
         force_authenticate(request=request,user=self.user)
         response = (ModuleByNameViewer.as_view())(request,name='TestModule1')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+# ============= Package Rate Testing ============ #
+    factory = APIRequestFactory()
+    pkg_endpoint = 'package/smallest/rate/'
+    
+    def test_package_rate_unauthorized(self):
+        
+        # Test Unauthorized Package request
+        request = self.factory.get(self.pkg_endpoint)
+        response = package_rate(request,pk='TestModule1')
+        self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
+
+
+    def test_package_rate_authorized(self):
+        
+        # Test authorized Package request
+        request = self.factory.get(self.pkg_endpoint)
+        force_authenticate(request=request,user=self.user)
+        response = package_rate(request,pk='smallest')
+        #self.assertEqual(response.status_code,status.HTTP_200_OK)
