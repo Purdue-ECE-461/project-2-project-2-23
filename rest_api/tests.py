@@ -163,5 +163,5 @@ class ModulePackageTestCase(TestCase):
         # Test authorized Package request
         request = self.factory.get(self.pkg_endpoint,kwargs={'ID':'smallest'})
         force_authenticate(request=request,user=self.user)
-        response = (ModulePackageViewer.as_view())(request,ID='TestModule1')
+        response = (ModulePackageViewer.as_view())(request,ID='smallest')
         self.assertEqual(response.status_code,status.HTTP_200_OK)
