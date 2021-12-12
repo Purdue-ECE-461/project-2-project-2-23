@@ -12,14 +12,14 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 
 from rest_api.views import ModulePackageViewer,ModuleByNameViewer
-from rest_api.models import ModulePackage
+from rest_api.models import ModulePackage,ModuleHistory
 
 # Test Data
 data = {
         "metadata": {
-        	"Name": "TestData",
+        	"Name": "smallest",
         	"Version": "1.2.0",
-        	"ID": "TestData"
+        	"ID": "smallest"
         },
         "data": {
         	"Content": "lajelmvoiejnoawijnm",
@@ -28,13 +28,13 @@ data = {
     }
 update_data = {
         "metadata": {
-        	"Name": "TestModule1",
+        	"Name": "smallest",
         	"Version": "2.2.0",
-        	"ID": "TestModule1"
+        	"ID": "smallest"
         },
         "data": {
         	"Content": "212154544xdfd",
-        	"URL": "https://github.com/test",
+        	"URL": "https://github.com/bendrucker/smallest",
         	"JSProgram": "\nprocess.exit(1)\n"
             }
     }
@@ -71,7 +71,7 @@ class ModulePackageTestCase(TestCase):
         force_authenticate(request=request,user=self.user)
         response = (ModulePackageViewer.as_view())(request)
         self.assertEqual(response.status_code,status.HTTP_201_CREATED)
-        pkg = ModulePackage.objects.get(ID="TestData")
+        pkg = ModulePackage.objects.get(ID="smallest")
         self.assertIsNotNone(pkg)
 
     # ============= GET Testing ============ #

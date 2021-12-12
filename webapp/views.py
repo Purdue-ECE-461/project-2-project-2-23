@@ -27,7 +27,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class CustomTokenObtainView(TokenObtainPairView):
     serializer_class = AuthenticationSerializer
 
-@api_view(['POST'])
+@api_view(['PUT','POST'])
 @permission_classes([])
 def authenticate(request):
     request.data['username'] = request.data['User']['name']
