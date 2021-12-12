@@ -104,7 +104,7 @@ class ModulePackageTestCase(TestCase):
         request = self.factory.put(self.pkg_endpoint,data=update_data,kwargs={'pk':'TestModule1'},format='json')
         force_authenticate(request=request,user=self.user)
         response = (ModulePackageViewer.as_view())(request,pk='TestModule1')
-        #self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
 
     # ============= DELETE Testing ============ #
     def test_delete_unauthorized(self):

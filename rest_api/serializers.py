@@ -23,7 +23,7 @@ class PackageMetaSerializer(serializers.Serializer):
 class PackageDataSerializer(serializers.Serializer):
     Content = serializers.CharField(required=False,default='')
     URL = serializers.CharField(required=False,default='')
-    JSProgram = serializers.CharField()
+    JSProgram = serializers.CharField(required=False,default='')
 
 class PackageCreationSerializer(WritableNestedModelSerializer):
     metadata = PackageMetaSerializer(source='*')
