@@ -1,0 +1,25 @@
+#! /usr/bin/env bash
+export $(cat .env | xargs)
+if [ $1 == 'install' ]
+then
+  python3 -m venv .
+  source ./bin/activate
+  pip3 install -r requirements.txt
+  num=$(cat requirements.txt | wc -l)
+  echo "${num} dependencies installed..."
+elif grep -qs 'github\|npmjs' $1;
+ then
+  python3 -m venv .
+  source ./bin/activate
+  python3 Main.py rank_mode $1
+elif [ $1 == 'test' ]
+ then
+  python3 -m venv .
+  source ./bin/activate
+  python3 RunTests.py
+elif [[ $1 == 'clean' ]]
+ then
+  rm -f -r coverage.json .report.json junk.txt project-1-22.log __pycache__/* testing/__pycache__/* htmlcov output_files
+else
+  echo OPTION NOT FOUND
+fi

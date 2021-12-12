@@ -1,0 +1,13 @@
+[run]
+branch = True
+
+[report]
+exclude_lines = 
+    pragma: no cover
+    if 0:
+    if __name__ == "__main__":
+    import
+show_missing = True
+
+[html]
+directory = coverage_html_report
