@@ -55,9 +55,9 @@ elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['ece461-project-2-23.ue.r.appspot.com','127.0.0.1',os.environ.get("CLOUD_RUN_HOST")]
+ALLOWED_HOSTS = ['ece461-project-2-23.ue.r.appspot.com','127.0.0.1','ttl-18h-cs357cltuq-uc.a.run.app']
 
 
 # Application definition

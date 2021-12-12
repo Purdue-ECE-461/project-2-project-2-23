@@ -83,7 +83,7 @@ def run_rank_mode(url, q):
     logger.info("-----------------------------------------------------")
     logger.info("-----------------------------------------------------")
 
-    if retvals[0] == '' | retvals[1] == []:
+    if retvals[0] is None or retvals[1] is None:
         exit(1)
     else: q.put(retvals) # originally just returned retvals
 
