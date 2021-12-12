@@ -13,7 +13,7 @@ class ModulePackage(models.Model):
     ID = models.CharField(max_length=255,blank=False,primary_key=True)
     Content = models.CharField(max_length=10285760,blank=True,null=True)
     URL = models.CharField(max_length=2048,blank=True,null=True)
-    JSProgram = models.TextField(max_length=1000000,blank=False,default='')
+    JSProgram = models.TextField(max_length=1000000,blank=True,default='')
 
 class ModuleHistory(models.Model):
     username = models.CharField(max_length=40,blank=True,default='')

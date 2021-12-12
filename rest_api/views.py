@@ -173,17 +173,8 @@ class ModulePackageViewer(ListAPIView):
         if('URL' in request.data['data'] and 'ID' in request.data['metadata']):
             ez_logger(("POST /package"),"PACKAGE INGESTION RUNNING")
             # Perform the analysis
-            q = Queue(1)
-            try: # diana added from here thru except :)
-                rank_thread = threading.Thread(target=run_rank_mode, args=(request.data['data']['URL'], q))
-                rank_thread.start()
-                (base64_encode, scores) = q.get()
-                rank_thread.join() # diana added :)
-            except Exception:
-                (base64_encode, scores) = run_rank_mode(request.data['data']['URL']) # this was original line
-            
+            (base64_encode, scores) = run_rank_mode(request.data['data']['URL']) # this was original line
             rank = create_rank(request.data['metadata']['ID'],scores)
-            
             request.data['data']['Content']=base64_encode
         else:
             ez_logger(("POST /package"),"REGULAR PACKAGE UPLOAD")
@@ -207,22 +198,10 @@ class ModulePackageViewer(ListAPIView):
             package = get_object_or_404(ModulePackage,ID=self.kwargs.get('pk'))
             if package is not None:
                 if('URL' in request.data['data'] and request.data['data']['URL'] != package.URL):
-                    # Perform the analysis
-                    q = Queue(1)
-                    try: # diana added from here thru except :)
-                        rank_thread = threading.Thread(target=run_rank_mode, args=(request.data['data']['URL'], q))
-                        rank_thread.start()
-                        (base64_encode, scores) = q.get()
-                        rank_thread.join() # diana added :)
-                    except Exception:
-                        (base64_encode, scores) = run_rank_mode(request.data['data']['URL']) # this was original line
-                    
-                    if scores is not None:
-                        rank = create_rank(package.Name,scores)
-                        if rank is not None:
-                            rank.save()
-                    if base64_encode is not None:
-                        request.data['data']['Content'] = base64_encode
+                    (base64_encode, scores) = run_rank_mode(request.data['data']['URL'])
+                    rank = create_rank(package.Name,scores)
+                    rank.save()
+                    request.data['data']['Content'] = base64_encode
                 else:
                     print("CONTENT CHANGE")
                 serializer = PackageCreationSerializer(package,data=request.data)
